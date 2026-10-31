@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" role="img" aria-labelledby="title desc">
+  <title id="title">Simplified BEVFormer architecture</title>
+  <desc id="desc">Multiple camera features are sampled by BEV queries and fused with aligned temporal BEV memory.</desc>
+  <rect width="1400" height="560" rx="30" fill="#0f1521"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3L0 6Z" fill="#8195b8"/></marker>
+  </defs>
+  <g font-family="system-ui,sans-serif" text-anchor="middle">
+    <text x="190" y="65" fill="#f7f9fc" font-size="25" font-weight="700">multi-camera features</text>
+    <g fill="#183b57" stroke="#44aff6" stroke-width="4">
+      <rect x="45" y="110" width="115" height="105" rx="14"/><rect x="135" y="235" width="115" height="105" rx="14"/><rect x="225" y="110" width="115" height="105" rx="14"/>
+    </g>
+    <g stroke="#b9e2ff" stroke-width="4"><path d="M65 190L105 140L145 180"/><path d="M155 315L195 265L235 305"/><path d="M245 190L285 140L325 180"/></g>
+    <rect x="470" y="150" width="260" height="250" rx="20" fill="#302043" stroke="#a855f7" stroke-width="5"/>
+    <text x="600" y="210" fill="#fff" font-size="28" font-weight="700">Spatial</text><text x="600" y="247" fill="#fff" font-size="28" font-weight="700">cross-attention</text>
+    <text x="600" y="310" fill="#e0c4ff" font-size="20">BEV queries sample</text><text x="600" y="338" fill="#e0c4ff" font-size="20">projected image regions</text>
+    <rect x="850" y="80" width="220" height="150" rx="20" fill="#4a3411" stroke="#f59e0b" stroke-width="5"/>
+    <text x="960" y="135" fill="#fff" font-size="25" font-weight="700">Previous BEV</text><text x="960" y="173" fill="#ffe2a8" font-size="19">ego-motion aligned</text>
+    <rect x="850" y="305" width="220" height="150" rx="20" fill="#173526" stroke="#22c55e" stroke-width="5"/>
+    <text x="960" y="360" fill="#fff" font-size="25" font-weight="700">Current BEV</text><text x="960" y="398" fill="#bff3ce" font-size="19">shared representation</text>
+    <rect x="1175" y="190" width="180" height="180" rx="20" fill="#203047" stroke="#dbe5f5" stroke-width="5"/>
+    <text x="1265" y="250" fill="#fff" font-size="25" font-weight="700">Task heads</text><text x="1265" y="292" fill="#c8d2e3" font-size="18">3D detection</text><text x="1265" y="322" fill="#c8d2e3" font-size="18">map / occupancy</text>
+  </g>
+  <g fill="none" stroke="#8195b8" stroke-width="6" marker-end="url(#arrow)">
+    <path d="M340 220H470"/><path d="M730 275H850"/><path d="M960 230V295"/><path d="M1070 380C1130 380 1120 305 1175 305"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" role="img" aria-labelledby="title desc">
+  <title id="title">Neural network primer</title>
+  <desc id="desc">Input nodes connected through hidden layers to output nodes.</desc>
+  <rect width="1000" height="430" rx="28" fill="#101622"/>
+  <g stroke="#60708f" stroke-width="3" opacity=".65">
+    <path d="M130 90L390 70M130 90L390 165M130 90L390 260M130 215L390 70M130 215L390 165M130 215L390 260M130 340L390 165M130 340L390 260M390 70L650 115M390 70L650 220M390 165L650 115M390 165L650 220M390 260L650 115M390 260L650 220M650 115L875 165M650 115L875 275M650 220L875 165M650 220L875 275"/>
+  </g>
+  <g fill="#44aff6" stroke="#b9e2ff" stroke-width="3">
+    <circle cx="130" cy="90" r="34"/><circle cx="130" cy="215" r="34"/><circle cx="130" cy="340" r="34"/>
+  </g>
+  <g fill="#a855f7" stroke="#e0c4ff" stroke-width="3">
+    <circle cx="390" cy="70" r="34"/><circle cx="390" cy="165" r="34"/><circle cx="390" cy="260" r="34"/>
+    <circle cx="650" cy="115" r="34"/><circle cx="650" cy="220" r="34"/>
+  </g>
+  <g fill="#22c55e" stroke="#bff3ce" stroke-width="3">
+    <circle cx="875" cy="165" r="34"/><circle cx="875" cy="275" r="34"/>
+  </g>
+  <g fill="#dbe5f5" font-family="system-ui,sans-serif" font-size="24" text-anchor="middle">
+    <text x="130" y="405">input</text><text x="520" y="405">learned representations</text><text x="875" y="405">output</text>
+  </g>
+</svg>

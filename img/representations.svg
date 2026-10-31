@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 550" role="img" aria-labelledby="title desc">
+  <title id="title">Scene representations in three stages</title>
+  <desc id="desc">Sensor space (image, point cloud) is encoded and transformed into a shared space (BEV grid, 3D voxels), from which task heads decode objects, occupancy, vector maps, and future motion.</desc>
+  <rect width="1400" height="550" rx="30" fill="#0e1420"/>
+
+  <g font-family="system-ui,sans-serif" text-anchor="middle">
+    <g fill="#f7f9fc" font-size="26" font-weight="750">
+      <text x="215" y="62">Sensor space</text>
+      <text x="690" y="62">Shared space</text>
+      <text x="1170" y="62">Task outputs</text>
+    </g>
+    <g fill="#aebad0" font-size="17">
+      <text x="215" y="92">what the sensors deliver</text>
+      <text x="690" y="92">where views and sensors meet</text>
+      <text x="1170" y="92">what downstream modules consume</text>
+    </g>
+
+    <g fill="#182337" stroke-width="4">
+      <rect x="50" y="125" width="330" height="185" rx="18" stroke="#44aff6"/>
+      <rect x="50" y="335" width="330" height="185" rx="18" stroke="#57c4d7"/>
+      <rect x="530" y="125" width="320" height="185" rx="18" stroke="#22c55e"/>
+      <rect x="530" y="335" width="320" height="185" rx="18" stroke="#f59e0b"/>
+      <rect x="975" y="125" width="185" height="185" rx="18" stroke="#a855f7"/>
+      <rect x="1180" y="125" width="185" height="185" rx="18" stroke="#f59e0b"/>
+      <rect x="975" y="335" width="185" height="185" rx="18" stroke="#ec4899"/>
+      <rect x="1180" y="335" width="185" height="185" rx="18" stroke="#57c4d7"/>
+    </g>
+
+    <g fill="#f7f9fc" font-size="24" font-weight="750">
+      <text x="215" y="163">Image</text>
+      <text x="215" y="373">Point cloud</text>
+      <text x="690" y="163">BEV grid</text>
+      <text x="690" y="373">3D voxels</text>
+      <text x="1067" y="163">Objects</text>
+      <text x="1272" y="163">Occupancy</text>
+      <text x="1067" y="373">Vector map</text>
+      <text x="1272" y="373">Futures</text>
+    </g>
+    <g fill="#aebad0" font-size="17">
+      <text x="215" y="293">dense semantics, no direct depth</text>
+      <text x="215" y="503">metric, sparse, unordered</text>
+      <text x="690" y="293">top-down metric features</text>
+      <text x="690" y="503">keeps height, costs memory</text>
+    </g>
+    <g fill="#aebad0" font-size="15">
+      <text x="1067" y="293">boxes, tracks</text>
+      <text x="1272" y="293">free, occupied, unknown</text>
+      <text x="1067" y="503">lanes + topology</text>
+      <text x="1272" y="503">multimodal motion</text>
+    </g>
+  </g>
+
+  <!-- Image: perspective road -->
+  <g fill="none" stroke="#44aff6" stroke-linecap="round">
+    <path d="M110 200H320" stroke-width="3" stroke-opacity=".6"/>
+    <path d="M150 272L205 200M280 272L225 200" stroke-width="4"/>
+    <path d="M215 272V205" stroke-width="3" stroke-dasharray="8 8"/>
+  </g>
+  <rect x="220" y="234" width="30" height="20" rx="4" fill="#44aff6" fill-opacity=".5" stroke="#44aff6" stroke-width="2"/>
+
+  <!-- Point cloud: rings of returns around the ego vehicle -->
+  <g fill="#57c4d7">
+    <circle cx="241" cy="463" r="4.5"/><circle cx="230" cy="452" r="4.5"/><circle cx="215" cy="448" r="4.5"/><circle cx="200" cy="452" r="4.5"/><circle cx="189" cy="463" r="4.5"/>
+    <circle cx="267" cy="459" r="4.5"/><circle cx="254" cy="439" r="4.5"/><circle cx="234" cy="426" r="4.5"/><circle cx="215" cy="423" r="4.5"/><circle cx="196" cy="426" r="4.5"/><circle cx="176" cy="439" r="4.5"/><circle cx="163" cy="459" r="4.5"/>
+    <circle cx="292" cy="457" r="4.5"/><circle cx="281" cy="432" r="4.5"/><circle cx="236" cy="401" r="4.5"/><circle cx="215" cy="398" r="4.5"/><circle cx="194" cy="401" r="4.5"/><circle cx="169" cy="412" r="4.5"/><circle cx="149" cy="432" r="4.5"/><circle cx="138" cy="457" r="4.5"/>
+    <circle cx="262" cy="414" r="5"/><circle cx="269" cy="408" r="5"/><circle cx="276" cy="415" r="5"/><circle cx="267" cy="421" r="5"/>
+  </g>
+  <rect x="207" y="468" width="16" height="12" rx="3" fill="#aebad0"/>
+
+  <!-- BEV grid -->
+  <rect x="651" y="184" width="78" height="88" fill="#22c55e" fill-opacity=".18"/>
+  <g stroke="#22c55e" stroke-width="2">
+    <path d="M599 184V272M625 184V272M651 184V272M677 184V272M703 184V272M729 184V272M755 184V272M781 184V272"/>
+    <path d="M599 184H781M599 206H781M599 228H781M599 250H781M599 272H781"/>
+  </g>
+  <rect x="681" y="212" width="18" height="32" rx="4" fill="#aebad0"/>
+  <rect x="733" y="188" width="18" height="14" rx="3" fill="#a855f7" fill-opacity=".8"/>
+
+  <!-- 3D voxels -->
+  <g stroke="#f59e0b" stroke-width="2" stroke-linejoin="round">
+    <path d="M620 410L646 425L620 440L594 425Z" fill="#f59e0b" fill-opacity=".55"/>
+    <path d="M594 425L620 440V470L594 455Z" fill="#f59e0b" fill-opacity=".35"/>
+    <path d="M620 440L646 425V455L620 470Z" fill="#f59e0b" fill-opacity=".2"/>
+    <path d="M690 410L716 425L690 440L664 425Z" fill="#f59e0b" fill-opacity=".55"/>
+    <path d="M664 425L690 440V470L664 455Z" fill="#f59e0b" fill-opacity=".35"/>
+    <path d="M690 440L716 425V455L690 470Z" fill="#f59e0b" fill-opacity=".2"/>
+    <path d="M690 380L716 395L690 410L664 395Z" fill="#f59e0b" fill-opacity=".55"/>
+    <path d="M664 395L690 410V440L664 425Z" fill="#f59e0b" fill-opacity=".35"/>
+    <path d="M690 410L716 395V425L690 440Z" fill="#f59e0b" fill-opacity=".2"/>
+    <path d="M760 410L786 425L760 440L734 425Z" fill="#f59e0b" fill-opacity=".55"/>
+    <path d="M734 425L760 440V470L734 455Z" fill="#f59e0b" fill-opacity=".35"/>
+    <path d="M760 440L786 425V455L760 470Z" fill="#f59e0b" fill-opacity=".2"/>
+  </g>
+
+  <!-- Objects: 3D box wireframe -->
+  <g fill="none" stroke="#a855f7" stroke-width="3" stroke-linejoin="round">
+    <rect x="1015" y="212" width="64" height="44"/>
+    <rect x="1031" y="198" width="64" height="44"/>
+    <path d="M1015 212L1031 198M1079 212L1095 198M1015 256L1031 242M1079 256L1095 242"/>
+    <rect x="1112" y="222" width="26" height="38"/>
+  </g>
+
+  <!-- Occupancy: occupied, free, and unknown cells -->
+  <g fill="#f59e0b">
+    <rect x="1207" y="184" width="26" height="22" fill-opacity=".7"/><rect x="1233" y="184" width="26" height="22" fill-opacity=".7"/>
+    <rect x="1285" y="228" width="26" height="22" fill-opacity=".7"/><rect x="1311" y="228" width="26" height="22" fill-opacity=".7"/><rect x="1311" y="250" width="26" height="22" fill-opacity=".7"/>
+    <rect x="1233" y="206" width="52" height="66" fill-opacity=".14"/>
+  </g>
+  <g fill="#7187ae" fill-opacity=".45">
+    <rect x="1285" y="184" width="26" height="22"/><rect x="1311" y="184" width="26" height="22"/><rect x="1311" y="206" width="26" height="22"/>
+  </g>
+  <g stroke="#f59e0b" stroke-width="2">
+    <path d="M1207 184V272M1233 184V272M1259 184V272M1285 184V272M1311 184V272M1337 184V272"/>
+    <path d="M1207 184H1337M1207 206H1337M1207 228H1337M1207 250H1337M1207 272H1337"/>
+  </g>
+
+  <!-- Vector map: polylines with a lane split -->
+  <g fill="none" stroke="#ec4899" stroke-width="3" stroke-linejoin="round">
+    <path d="M1000 475L1030 450L1065 432L1105 420L1140 414"/>
+    <path d="M1000 440L1032 418L1068 402L1108 392L1140 388"/>
+    <path d="M1065 432L1105 455L1140 468"/>
+  </g>
+  <g fill="#ec4899">
+    <circle cx="1000" cy="475" r="4.5"/><circle cx="1030" cy="450" r="4.5"/><circle cx="1065" cy="432" r="4.5"/><circle cx="1105" cy="420" r="4.5"/><circle cx="1140" cy="414" r="4.5"/>
+    <circle cx="1000" cy="440" r="4.5"/><circle cx="1032" cy="418" r="4.5"/><circle cx="1068" cy="402" r="4.5"/><circle cx="1108" cy="392" r="4.5"/><circle cx="1140" cy="388" r="4.5"/>
+    <circle cx="1105" cy="455" r="4.5"/><circle cx="1140" cy="468" r="4.5"/>
+  </g>
+
+  <!-- Futures: one agent, three weighted trajectories -->
+  <g fill="none" stroke="#57c4d7" stroke-width="4" stroke-linecap="round">
+    <path d="M1236 460C1270 458 1300 457 1340 456" stroke-opacity=".95"/>
+    <path d="M1236 460C1272 456 1300 432 1318 398" stroke-opacity=".6"/>
+    <path d="M1236 460C1268 462 1300 470 1335 480" stroke-opacity=".3"/>
+  </g>
+  <rect x="1212" y="452" width="24" height="16" rx="4" fill="#57c4d7"/>
+
+  <!-- Stage arrows -->
+  <g stroke="#7187ae" stroke-width="4" stroke-linecap="round">
+    <path d="M392 217H511M392 427H511M862 217H957M862 427H957"/>
+  </g>
+  <g fill="#7187ae">
+    <path d="M524 217L510 209V225Z"/><path d="M524 427L510 419V435Z"/>
+    <path d="M970 217L956 209V225Z"/><path d="M970 427L956 419V435Z"/>
+  </g>
+  <g fill="#aebad0" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle">
+    <text x="455" y="314">encode +</text><text x="455" y="338">view transform</text>
+    <text x="914" y="314">task</text><text x="914" y="338">heads</text>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build and cache
+.sass-cache
+dist/*.map
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+*.iml
+*.iws
+*.eml
+
+# Logs
+log/*.log
+tmp/**
+

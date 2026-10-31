@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 0 1530 520" role="img" aria-labelledby="title desc">
+  <title id="title">End-to-end autonomous-driving stack</title>
+  <desc id="desc">The localization, perception, prediction, and planning circles of the stack merge into one learned network between sensors and control, with feedback from the vehicle.</desc>
+  <defs>
+    <radialGradient id="blue" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#0088d6" stop-opacity=".68"/>
+      <stop offset=".35" stop-color="#0088d6" stop-opacity=".52"/>
+      <stop offset=".68" stop-color="#0088d6" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#0088d6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="teal" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#00a99d" stop-opacity=".68"/>
+      <stop offset=".35" stop-color="#00a99d" stop-opacity=".52"/>
+      <stop offset=".68" stop-color="#00a99d" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#00a99d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="violet" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity=".68"/>
+      <stop offset=".35" stop-color="#7c3aed" stop-opacity=".52"/>
+      <stop offset=".68" stop-color="#7c3aed" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="magenta" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#d81b78" stop-opacity=".68"/>
+      <stop offset=".35" stop-color="#d81b78" stop-opacity=".52"/>
+      <stop offset=".68" stop-color="#d81b78" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#d81b78" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amber" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#e69000" stop-opacity=".7"/>
+      <stop offset=".35" stop-color="#e69000" stop-opacity=".54"/>
+      <stop offset=".68" stop-color="#e69000" stop-opacity=".26"/>
+      <stop offset="1" stop-color="#e69000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="green" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#16a34a" stop-opacity=".68"/>
+      <stop offset=".35" stop-color="#16a34a" stop-opacity=".52"/>
+      <stop offset=".68" stop-color="#16a34a" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#16a34a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="coral" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ef4f3a" stop-opacity=".7"/>
+      <stop offset=".35" stop-color="#ef4f3a" stop-opacity=".54"/>
+      <stop offset=".68" stop-color="#ef4f3a" stop-opacity=".26"/>
+      <stop offset="1" stop-color="#ef4f3a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g style="mix-blend-mode:multiply">
+    <circle cx="220" cy="285" r="150" fill="url(#blue)"/>
+    <circle cx="560" cy="235" r="150" fill="url(#teal)"/>
+    <circle cx="600" cy="335" r="160" fill="url(#violet)"/>
+    <circle cx="690" cy="245" r="160" fill="url(#magenta)"/>
+    <circle cx="730" cy="335" r="150" fill="url(#amber)"/>
+    <circle cx="1040" cy="285" r="145" fill="url(#green)"/>
+    <circle cx="1250" cy="285" r="125" fill="url(#coral)"/>
+  </g>
+
+  <path d="M78 68H1388" fill="none" stroke="#52637d" stroke-width="9" stroke-linecap="round"/>
+  <path d="M1388 47L1435 68L1388 89Z" fill="#52637d"/>
+  <text x="725" y="48" fill="#26334a" font-family="system-ui,sans-serif" font-size="21" font-weight="750" letter-spacing="2.5" text-anchor="middle">DATA PIPELINE</text>
+
+  <path d="M1250 410C1190 500 860 520 720 470" fill="none" stroke="#65758e" stroke-width="4" stroke-linecap="round" stroke-dasharray="11 10"/>
+  <path d="M0 0L-18 -8L-18 8Z" fill="#65758e" transform="translate(720 470) rotate(-160)"/>
+  <text x="1010" y="515" fill="#566278" font-family="system-ui,sans-serif" font-size="20" text-anchor="middle">closed loop: actions change what happens next</text>
+
+  <g fill="#172033" font-family="system-ui,sans-serif" text-anchor="middle">
+    <g font-size="26" font-weight="750">
+      <text x="220" y="277">Sensors</text>
+      <text x="645" y="272" font-size="32">One network</text>
+      <text x="1040" y="277">Control</text>
+      <text x="1250" y="277">Vehicle</text>
+    </g>
+    <g fill="#3f4c62" font-size="17" font-weight="500">
+      <text x="220" y="306">raw observations</text>
+      <text x="645" y="304" font-size="19">sensors in, trajectory out</text>
+      <text x="645" y="334" fill-opacity=".72">localization, perception, prediction, planning</text>
+      <text x="1040" y="306">how?</text>
+      <text x="1250" y="306">act</text>
+    </g>
+    <rect x="580" y="372" width="130" height="31" rx="15.5" fill="#f7f2ff" stroke="#6b21a8" stroke-width="2.5"/>
+    <text x="645" y="394" fill="#6b21a8" font-size="15" font-weight="700">END-TO-END</text>
+  </g>
+</svg>

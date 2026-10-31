@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1350 520" role="img" aria-labelledby="title desc">
+  <title id="title">Simplified MapTR pipeline</title>
+  <desc id="desc">Multi-view features and map queries produce vectorized road elements.</desc>
+  <rect width="1350" height="520" rx="30" fill="#f8fafc"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3L0 6Z" fill="#52637d"/></marker>
+  </defs>
+  <g font-family="system-ui,sans-serif" text-anchor="middle">
+    <rect x="45" y="145" width="215" height="220" rx="18" fill="#e7f3fb" stroke="#1687cf" stroke-width="4"/>
+    <text x="152" y="205" fill="#172033" font-size="27" font-weight="700">Multi-view</text><text x="152" y="240" fill="#172033" font-size="27" font-weight="700">features</text>
+    <path d="M85 315L130 265L175 305L220 245" fill="none" stroke="#075f9b" stroke-width="8"/>
+    <rect x="360" y="145" width="240" height="220" rx="18" fill="#f2eafa" stroke="#7e22ce" stroke-width="4"/>
+    <text x="480" y="205" fill="#172033" font-size="27" font-weight="700">Instance queries</text><text x="480" y="242" fill="#6b21a8" font-size="20">lane � divider � crossing</text>
+    <g fill="#b981e5" stroke="#6b21a8" stroke-width="3"><circle cx="425" cy="300" r="18"/><circle cx="480" cy="300" r="18"/><circle cx="535" cy="300" r="18"/></g>
+    <rect x="700" y="145" width="240" height="220" rx="18" fill="#fff2d8" stroke="#b86f05" stroke-width="4"/>
+    <text x="820" y="205" fill="#172033" font-size="27" font-weight="700">Point queries</text><text x="820" y="242" fill="#8a4f00" font-size="20">ordered polyline points</text>
+    <g fill="#d58b0d"><circle cx="750" cy="315" r="9"/><circle cx="785" cy="285" r="9"/><circle cx="825" cy="300" r="9"/><circle cx="865" cy="260" r="9"/><circle cx="900" cy="275" r="9"/></g>
+    <rect x="1040" y="105" width="260" height="300" rx="18" fill="#e8f7ed" stroke="#15803d" stroke-width="4"/>
+    <text x="1170" y="155" fill="#172033" font-size="27" font-weight="700">Vector map</text>
+    <path d="M1080 350C1120 235 1160 205 1220 330" fill="none" stroke="#1687cf" stroke-width="9"/>
+    <path d="M1120 370C1160 250 1200 225 1260 320" fill="none" stroke="#d58b0d" stroke-width="9" stroke-dasharray="18 10"/>
+    <path d="M1080 260H1260" stroke="#c22572" stroke-width="12"/>
+  </g>
+  <g fill="none" stroke="#52637d" stroke-width="6" marker-end="url(#arrow)">
+    <path d="M260 255H360"/><path d="M600 255H700"/><path d="M940 255H1040"/>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 500" role="img" aria-labelledby="title desc">
+  <title id="title">Two-dimensional and three-dimensional detection</title>
+  <desc id="desc">Camera image bounding boxes alongside top-view oriented boxes.</desc>
+  <rect width="1100" height="500" rx="28" fill="#0f1521"/>
+  <g font-family="system-ui,sans-serif">
+    <text x="270" y="55" fill="#f7f9fc" font-size="26" font-weight="700" text-anchor="middle">Image: 2D boxes</text>
+    <text x="825" y="55" fill="#f7f9fc" font-size="26" font-weight="700" text-anchor="middle">BEV: oriented 3D boxes</text>
+    <rect x="45" y="85" width="450" height="350" rx="18" fill="#172033" stroke="#35445f" stroke-width="4"/>
+    <path d="M45 355L180 250L285 310L390 210L495 310V435H45Z" fill="#263750"/>
+    <path d="M45 345H495" stroke="#8491a8" stroke-width="5"/>
+    <rect x="120" y="215" width="130" height="120" fill="none" stroke="#22c55e" stroke-width="6"/>
+    <rect x="310" y="175" width="110" height="165" fill="none" stroke="#f59e0b" stroke-width="6"/>
+    <text x="125" y="205" fill="#bff3ce" font-size="18">car 0.97</text>
+    <text x="310" y="165" fill="#ffe2a8" font-size="18">pedestrian 0.91</text>
+    <rect x="605" y="85" width="450" height="350" rx="18" fill="#172033" stroke="#35445f" stroke-width="4"/>
+    <g stroke="#27364f" stroke-width="2"><path d="M650 85V435M700 85V435M750 85V435M800 85V435M850 85V435M900 85V435M950 85V435M1000 85V435"/><path d="M605 135H1055M605 185H1055M605 235H1055M605 285H1055M605 335H1055M605 385H1055"/></g>
+    <rect x="800" y="325" width="70" height="110" rx="25" fill="#26334a" stroke="#d9e2ef" stroke-width="4"/>
+    <g fill="none" stroke-width="6">
+      <rect x="690" y="145" width="115" height="58" transform="rotate(-18 747 174)" stroke="#22c55e"/>
+      <rect x="890" y="215" width="58" height="105" transform="rotate(28 919 267)" stroke="#f59e0b"/>
+    </g>
+    <path d="M835 320V255" stroke="#44aff6" stroke-width="6"/>
+    <path d="M835 250L824 270M835 250L846 270" stroke="#44aff6" stroke-width="6"/>
+    <text x="835" y="470" fill="#aebad0" font-size="18" text-anchor="middle">ego vehicle</text>
+  </g>
+</svg>

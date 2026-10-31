@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 610" role="img" aria-labelledby="title desc">
+  <title id="title">Scaled dot-product attention in four steps</title>
+  <desc id="desc">Tokens are projected to queries, keys, and values; query-key scores form an N by N matrix; a row-wise softmax turns one row into weights that sum to one; the output is the weighted sum of the values.</desc>
+
+  <g font-family="system-ui,sans-serif" text-anchor="middle">
+    <g fill="#172033" font-size="25" font-weight="750">
+      <text x="222" y="48">1 &#183; Project</text>
+      <text x="664" y="48">2 &#183; Score</text>
+      <text x="975" y="48">3 &#183; Normalize</text>
+      <text x="1215" y="48">4 &#183; Mix</text>
+    </g>
+    <g fill="#465268" font-size="18">
+      <text x="222" y="82">Q = XW<tspan dy="6" font-size="13">Q</tspan><tspan dy="-6">,  K = XW</tspan><tspan dy="6" font-size="13">K</tspan><tspan dy="-6">,  V = XW</tspan><tspan dy="6" font-size="13">V</tspan></text>
+      <text x="664" y="82">S = QK<tspan dy="-8" font-size="13">T</tspan><tspan dy="8"> / &#8730;d</tspan><tspan dy="6" font-size="13">k</tspan></text>
+      <text x="975" y="82">softmax per row</text>
+      <text x="1215" y="82">Y = A V</text>
+    </g>
+
+    <!-- Step 1: Project -->
+    <g fill="#e8edf5" stroke="#52637d" stroke-width="2.5">
+      <rect x="30" y="170" width="120" height="40" rx="8"/>
+      <rect x="30" y="220" width="120" height="40" rx="8"/>
+      <rect x="30" y="270" width="120" height="40" rx="8"/>
+      <rect x="30" y="320" width="120" height="40" rx="8"/>
+      <rect x="30" y="370" width="120" height="40" rx="8"/>
+      <rect x="30" y="420" width="120" height="40" rx="8"/>
+    </g>
+    <g fill="#172033" font-size="18">
+      <text x="90" y="196">x&#8321;</text><text x="90" y="246">x&#8322;</text><text x="90" y="296">x&#8323;</text>
+      <text x="90" y="346">x&#8324;</text><text x="90" y="396">x&#8325;</text><text x="90" y="446">x&#8326;</text>
+    </g>
+    <g fill="#1687cf" fill-opacity=".5" stroke="#1687cf" stroke-width="2">
+      <rect x="215" y="170" width="56" height="40" rx="7"/><rect x="215" y="220" width="56" height="40" rx="7"/>
+      <rect x="215" y="270" width="56" height="40" rx="7"/><rect x="215" y="320" width="56" height="40" rx="7"/>
+      <rect x="215" y="370" width="56" height="40" rx="7"/><rect x="215" y="420" width="56" height="40" rx="7"/>
+    </g>
+    <g fill="#15803d" fill-opacity=".5" stroke="#15803d" stroke-width="2">
+      <rect x="287" y="170" width="56" height="40" rx="7"/><rect x="287" y="220" width="56" height="40" rx="7"/>
+      <rect x="287" y="270" width="56" height="40" rx="7"/><rect x="287" y="320" width="56" height="40" rx="7"/>
+      <rect x="287" y="370" width="56" height="40" rx="7"/><rect x="287" y="420" width="56" height="40" rx="7"/>
+    </g>
+    <g fill="#d81b78" fill-opacity=".5" stroke="#d81b78" stroke-width="2">
+      <rect x="359" y="170" width="56" height="40" rx="7"/><rect x="359" y="220" width="56" height="40" rx="7"/>
+      <rect x="359" y="270" width="56" height="40" rx="7"/><rect x="359" y="320" width="56" height="40" rx="7"/>
+      <rect x="359" y="370" width="56" height="40" rx="7"/><rect x="359" y="420" width="56" height="40" rx="7"/>
+    </g>
+    <g font-size="24" font-weight="750">
+      <text x="90" y="150" fill="#172033">X</text>
+      <text x="243" y="150" fill="#1687cf">Q</text>
+      <text x="315" y="150" fill="#15803d">K</text>
+      <text x="387" y="150" fill="#d81b78">V</text>
+    </g>
+
+    <!-- Step 2: Score -->
+    <g fill="#15803d" fill-opacity=".5" stroke="#15803d" stroke-width="2">
+      <rect x="545" y="118" width="44" height="34" rx="6"/><rect x="595" y="118" width="44" height="34" rx="6"/>
+      <rect x="645" y="118" width="44" height="34" rx="6"/><rect x="695" y="118" width="44" height="34" rx="6"/>
+      <rect x="745" y="118" width="44" height="34" rx="6"/><rect x="795" y="118" width="44" height="34" rx="6"/>
+    </g>
+    <g fill="#1687cf" fill-opacity=".5" stroke="#1687cf" stroke-width="2">
+      <rect x="490" y="170" width="44" height="40" rx="6"/><rect x="490" y="220" width="44" height="40" rx="6"/>
+      <rect x="490" y="270" width="44" height="40" rx="6"/><rect x="490" y="320" width="44" height="40" rx="6"/>
+      <rect x="490" y="370" width="44" height="40" rx="6"/><rect x="490" y="420" width="44" height="40" rx="6"/>
+    </g>
+    <g fill="#172033" font-size="16">
+      <text x="567" y="141">k&#8321;</text><text x="617" y="141">k&#8322;</text><text x="667" y="141">k&#8323;</text>
+      <text x="717" y="141">k&#8324;</text><text x="767" y="141">k&#8325;</text><text x="817" y="141">k&#8326;</text>
+      <text x="512" y="196">q&#8321;</text><text x="512" y="246">q&#8322;</text><text x="512" y="296">q&#8323;</text>
+      <text x="512" y="346">q&#8324;</text><text x="512" y="396">q&#8325;</text><text x="512" y="446">q&#8326;</text>
+    </g>
+    <g fill="#7e22ce">
+      <rect x="545" y="170" width="44" height="40" rx="5" fill-opacity=".8"/><rect x="595" y="170" width="44" height="40" rx="5" fill-opacity=".3"/><rect x="645" y="170" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="695" y="170" width="44" height="40" rx="5" fill-opacity=".15"/><rect x="745" y="170" width="44" height="40" rx="5" fill-opacity=".25"/><rect x="795" y="170" width="44" height="40" rx="5" fill-opacity=".2"/>
+      <rect x="545" y="220" width="44" height="40" rx="5" fill-opacity=".25"/><rect x="595" y="220" width="44" height="40" rx="5" fill-opacity=".75"/><rect x="645" y="220" width="44" height="40" rx="5" fill-opacity=".35"/><rect x="695" y="220" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="745" y="220" width="44" height="40" rx="5" fill-opacity=".15"/><rect x="795" y="220" width="44" height="40" rx="5" fill-opacity=".3"/>
+      <rect x="545" y="270" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="595" y="270" width="44" height="40" rx="5" fill-opacity=".3"/><rect x="645" y="270" width="44" height="40" rx="5" fill-opacity=".7"/><rect x="695" y="270" width="44" height="40" rx="5" fill-opacity=".4"/><rect x="745" y="270" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="795" y="270" width="44" height="40" rx="5" fill-opacity=".15"/>
+      <rect x="545" y="320" width="44" height="40" rx="5" fill-opacity=".24"/><rect x="595" y="320" width="44" height="40" rx="5" fill-opacity=".33"/><rect x="645" y="320" width="44" height="40" rx="5" fill-opacity=".26"/><rect x="695" y="320" width="44" height="40" rx="5" fill-opacity=".38"/><rect x="745" y="320" width="44" height="40" rx="5" fill-opacity=".9"/><rect x="795" y="320" width="44" height="40" rx="5" fill-opacity=".3"/>
+      <rect x="545" y="370" width="44" height="40" rx="5" fill-opacity=".15"/><rect x="595" y="370" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="645" y="370" width="44" height="40" rx="5" fill-opacity=".35"/><rect x="695" y="370" width="44" height="40" rx="5" fill-opacity=".45"/><rect x="745" y="370" width="44" height="40" rx="5" fill-opacity=".8"/><rect x="795" y="370" width="44" height="40" rx="5" fill-opacity=".25"/>
+      <rect x="545" y="420" width="44" height="40" rx="5" fill-opacity=".3"/><rect x="595" y="420" width="44" height="40" rx="5" fill-opacity=".15"/><rect x="645" y="420" width="44" height="40" rx="5" fill-opacity=".2"/><rect x="695" y="420" width="44" height="40" rx="5" fill-opacity=".25"/><rect x="745" y="420" width="44" height="40" rx="5" fill-opacity=".35"/><rect x="795" y="420" width="44" height="40" rx="5" fill-opacity=".75"/>
+    </g>
+    <rect x="484" y="314" width="361" height="52" rx="10" fill="none" stroke="#d08000" stroke-width="3.5"/>
+
+    <!-- Step 3: Normalize -->
+    <path d="M885 440H1062" stroke="#52637d" stroke-width="2"/>
+    <g fill="#d08000">
+      <rect x="895" y="416" width="20" height="24" rx="3" fill-opacity=".45"/>
+      <rect x="923" y="392" width="20" height="48" rx="3" fill-opacity=".45"/>
+      <rect x="951" y="412" width="20" height="28" rx="3" fill-opacity=".45"/>
+      <rect x="979" y="380" width="20" height="60" rx="3" fill-opacity=".45"/>
+      <rect x="1007" y="240" width="20" height="200" rx="3" fill-opacity=".9"/>
+      <rect x="1035" y="400" width="20" height="40" rx="3" fill-opacity=".45"/>
+    </g>
+    <g fill="#465268" font-size="16">
+      <text x="905" y="462">1</text><text x="933" y="462">2</text><text x="961" y="462">3</text>
+      <text x="989" y="462">4</text><text x="1017" y="462">5</text><text x="1045" y="462">6</text>
+    </g>
+
+    <!-- Step 4: Mix -->
+    <g fill="#d81b78" stroke="#d81b78" stroke-width="2">
+      <rect x="1110" y="170" width="56" height="40" rx="7" fill-opacity=".24"/>
+      <rect x="1110" y="220" width="56" height="40" rx="7" fill-opacity=".33"/>
+      <rect x="1110" y="270" width="56" height="40" rx="7" fill-opacity=".26"/>
+      <rect x="1110" y="320" width="56" height="40" rx="7" fill-opacity=".38"/>
+      <rect x="1110" y="370" width="56" height="40" rx="7" fill-opacity=".9"/>
+      <rect x="1110" y="420" width="56" height="40" rx="7" fill-opacity=".3"/>
+    </g>
+    <g fill="#7e22ce" fill-opacity=".22" stroke="#7e22ce" stroke-width="2">
+      <rect x="1250" y="170" width="70" height="40" rx="7"/><rect x="1250" y="220" width="70" height="40" rx="7"/>
+      <rect x="1250" y="270" width="70" height="40" rx="7"/><rect x="1250" y="370" width="70" height="40" rx="7"/>
+      <rect x="1250" y="420" width="70" height="40" rx="7"/>
+    </g>
+    <rect x="1250" y="320" width="70" height="40" rx="7" fill="#d08000" fill-opacity=".6" stroke="#d08000" stroke-width="3"/>
+    <g fill="#172033" font-size="17">
+      <text x="1138" y="196">v&#8321;</text><text x="1138" y="246">v&#8322;</text><text x="1138" y="296">v&#8323;</text>
+      <text x="1138" y="346">v&#8324;</text><text x="1138" y="396">v&#8325;</text><text x="1138" y="446">v&#8326;</text>
+      <text x="1285" y="196">y&#8321;</text><text x="1285" y="246">y&#8322;</text><text x="1285" y="296">y&#8323;</text>
+      <text x="1285" y="346">y&#8324;</text><text x="1285" y="396">y&#8325;</text><text x="1285" y="446">y&#8326;</text>
+    </g>
+    <g font-size="22" font-weight="750">
+      <text x="1138" y="150" fill="#d81b78">weighted V</text>
+      <text x="1285" y="150" fill="#172033">Y</text>
+    </g>
+    <text x="1202" y="326" fill="#172033" font-size="28" font-weight="700">&#931;</text>
+
+    <g fill="#465268" font-size="17">
+      <text x="90" y="500">N tokens &#215; d</text>
+      <text x="315" y="500">learned projections</text>
+      <text x="692" y="500">N &#215; N scores</text>
+      <text x="975" y="500">weights of q&#8324;, sum = 1</text>
+      <text x="1285" y="500">N &#215; d<tspan dy="5" font-size="12">v</tspan></text>
+    </g>
+    <text x="1215" y="545" fill="#172033" font-size="19">y&#8324; = &#931;<tspan dy="6" font-size="13">j</tspan><tspan dy="-6"> a</tspan><tspan dy="6" font-size="13">4j</tspan><tspan dy="-6"> v</tspan><tspan dy="6" font-size="13">j</tspan></text>
+    <text x="700" y="592" fill="#465268" font-size="19" font-style="italic">Each output is a weighted average of all values; the weights measure how well its query matches each key.</text>
+  </g>
+
+  <g stroke="#52637d" stroke-width="4" stroke-linecap="round">
+    <path d="M162 315H197"/><path d="M425 315H469"/><path d="M850 340H871"/><path d="M1064 340H1091"/><path d="M1174 340H1231"/>
+  </g>
+  <g fill="#52637d">
+    <path d="M209 315L196 307V323Z"/><path d="M481 315L468 307V323Z"/><path d="M883 340L870 332V348Z"/><path d="M1103 340L1090 332V348Z"/><path d="M1243 340L1230 332V348Z"/>
+  </g>
+</svg>
