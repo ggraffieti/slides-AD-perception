@@ -20,10 +20,10 @@
       <rect x="50" y="335" width="330" height="185" rx="18" stroke="#1592a8"/>
       <rect x="530" y="125" width="320" height="185" rx="18" stroke="#169447"/>
       <rect x="530" y="335" width="320" height="185" rx="18" stroke="#d58b0d"/>
-      <rect x="975" y="125" width="185" height="185" rx="18" stroke="#7e22ce"/>
-      <rect x="1180" y="125" width="185" height="185" rx="18" stroke="#d58b0d"/>
-      <rect x="975" y="335" width="185" height="185" rx="18" stroke="#c22572"/>
-      <rect x="1180" y="335" width="185" height="185" rx="18" stroke="#1592a8"/>
+      <rect x="975" y="125" width="185" height="185" rx="18" stroke="#c22572"/>
+      <rect x="1180" y="125" width="185" height="185" rx="18" stroke="#1592a8"/>
+      <rect x="975" y="335" width="185" height="185" rx="18" stroke="#7e22ce"/>
+      <rect x="1180" y="335" width="185" height="185" rx="18" stroke="#d58b0d"/>
     </g>
 
     <g fill="#172033" font-size="24" font-weight="750">
@@ -31,10 +31,10 @@
       <text x="215" y="373">Point cloud</text>
       <text x="690" y="163">BEV grid</text>
       <text x="690" y="373">3D voxels</text>
-      <text x="1067" y="163">Objects</text>
-      <text x="1272" y="163">Occupancy</text>
-      <text x="1067" y="373">Vector map</text>
-      <text x="1272" y="373">Futures</text>
+      <text x="1067" y="163">Vector map</text>
+      <text x="1272" y="163">Futures</text>
+      <text x="1067" y="373">Objects</text>
+      <text x="1272" y="373">Occupancy</text>
     </g>
     <g fill="#566278" font-size="17">
       <text x="215" y="293">dense semantics, no direct depth</text>
@@ -43,10 +43,10 @@
       <text x="690" y="503">keeps height, costs memory</text>
     </g>
     <g fill="#566278" font-size="15">
-      <text x="1067" y="293">boxes, tracks</text>
-      <text x="1272" y="293">free, occupied, unknown</text>
-      <text x="1067" y="503">lanes + topology</text>
-      <text x="1272" y="503">multimodal motion</text>
+      <text x="1067" y="293">lanes + topology</text>
+      <text x="1272" y="293">multimodal motion</text>
+      <text x="1067" y="503">boxes, tracks</text>
+      <text x="1272" y="503">free, occupied, unknown</text>
     </g>
   </g>
 
@@ -92,15 +92,16 @@
     <path d="M760 440L786 425V455L760 470Z" fill="#d58b0d" fill-opacity=".2"/>
   </g>
 
-  <!-- Objects: 3D box wireframe -->
-  <g fill="none" stroke="#7e22ce" stroke-width="3" stroke-linejoin="round">
+  <!-- Objects: 3D box wireframe, on the point-cloud / voxel row -->
+  <g transform="translate(0 210)" fill="none" stroke="#7e22ce" stroke-width="3" stroke-linejoin="round">
     <rect x="1015" y="212" width="64" height="44"/>
     <rect x="1031" y="198" width="64" height="44"/>
     <path d="M1015 212L1031 198M1079 212L1095 198M1015 256L1031 242M1079 256L1095 242"/>
     <rect x="1112" y="222" width="26" height="38"/>
   </g>
 
-  <!-- Occupancy: occupied, free, and unknown cells -->
+  <!-- Occupancy: occupied, free, and unknown cells, on the point-cloud / voxel row -->
+  <g transform="translate(0 210)">
   <g fill="#d58b0d">
     <rect x="1207" y="184" width="26" height="22" fill-opacity=".7"/><rect x="1233" y="184" width="26" height="22" fill-opacity=".7"/>
     <rect x="1285" y="228" width="26" height="22" fill-opacity=".7"/><rect x="1311" y="228" width="26" height="22" fill-opacity=".7"/><rect x="1311" y="250" width="26" height="22" fill-opacity=".7"/>
@@ -113,8 +114,10 @@
     <path d="M1207 184V272M1233 184V272M1259 184V272M1285 184V272M1311 184V272M1337 184V272"/>
     <path d="M1207 184H1337M1207 206H1337M1207 228H1337M1207 250H1337M1207 272H1337"/>
   </g>
+  </g>
 
-  <!-- Vector map: polylines with a lane split -->
+  <!-- Vector map: polylines with a lane split, on the BEV row -->
+  <g transform="translate(0 -210)">
   <g fill="none" stroke="#c22572" stroke-width="3" stroke-linejoin="round">
     <path d="M1000 475L1030 450L1065 432L1105 420L1140 414"/>
     <path d="M1000 440L1032 418L1068 402L1108 392L1140 388"/>
@@ -125,14 +128,17 @@
     <circle cx="1000" cy="440" r="4.5"/><circle cx="1032" cy="418" r="4.5"/><circle cx="1068" cy="402" r="4.5"/><circle cx="1108" cy="392" r="4.5"/><circle cx="1140" cy="388" r="4.5"/>
     <circle cx="1105" cy="455" r="4.5"/><circle cx="1140" cy="468" r="4.5"/>
   </g>
+  </g>
 
-  <!-- Futures: one agent, three weighted trajectories -->
+  <!-- Futures: one agent, three weighted trajectories, on the BEV row -->
+  <g transform="translate(0 -210)">
   <g fill="none" stroke="#1592a8" stroke-width="4" stroke-linecap="round">
     <path d="M1236 460C1270 458 1300 457 1340 456" stroke-opacity=".95"/>
     <path d="M1236 460C1272 456 1300 432 1318 398" stroke-opacity=".6"/>
     <path d="M1236 460C1268 462 1300 470 1335 480" stroke-opacity=".3"/>
   </g>
   <rect x="1212" y="452" width="24" height="16" rx="4" fill="#1592a8"/>
+  </g>
 
   <!-- Stage arrows -->
   <g stroke="#52637d" stroke-width="4" stroke-linecap="round">

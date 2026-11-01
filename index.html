@@ -31,10 +31,10 @@
 
 **Gabriele Graffieti**
 
-<span class="subtitle">From photons and point clouds to a scene a car can act on</span>
+<span class="subtitle">Autonomous Driving and ADAS Technologies Seminar</span>
 
 <div class="title-meta">
-  <span>Autonomous Driving and ADAS Technologies</span>
+  <span>University of Parma</span>
   <span>Nov. 9, 2026</span>
 </div>
 
@@ -50,11 +50,14 @@
   <div class="two-c-col-r">
     <ul>
       <li>Sr. Algorithm Engineer @ <a href="https://www.ambarella.com">Ambarella</a>
-        <ul><li>Deep Learning & Computer Vision</li></ul>
+        <ul>
+          <li>Deep Learning & Computer Vision</li>
+          <li>Perception team</li>
+        </ul>
       </li>
-      <li>Past Head of AI Research @ <a href="https://www.aiforpeople.org">AI for People</a></li>
       <li>Past researcher & PhD student @ <a href="https://www.unibo.it/en">University of Bologna</a></li>
-      <li>Research interests: autonomous driving, continual learning, GenAI, and AI safety</li>
+      <li>Past Head of AI Research @ <a href="https://www.aiforpeople.org">AI for People</a></li>
+      <li>Member of many AI/ML associations</li>
     </ul>
   </div>
 </div>
@@ -65,10 +68,9 @@
 
 - **Foundations**: the autonomous-driving stack, sensors, and four hard problems
 - **Representations**: images, point clouds, BEV, occupancy, and vectors
-- **Core tasks**: detection & tracking, occupancy & free space, mapping & topology, motion forecasting—each with key papers and a hands-on project
-- **Fusion & multitask**: sensor fusion, BEVFusion, UniAD, and PARA-Drive
-- **Evaluation & risks**: metrics, deployment KPIs, and failure modes
-- **Frontiers**: generative simulation, world models, end-to-end driving, and VLMs/VLAs
+- **Core tasks**: detection and tracking, occupancy and free space, mapping and topology, motion forecasting
+- **Multitask**: UniAD and PARA-Drive, perception trained together with planning
+- **Frontiers**: generative simulation, world models, end-to-end driving, VLMs, VLAs, and decision models
 
 ---
 
@@ -112,6 +114,7 @@ No prior knowledge of autonomous driving is required.
   <span class="tag">Not everything is a grid</span>
   <p class="mini">LiDAR sweep → N × 4 set of points (x, y, z, intensity):<br>no natural order, and N changes from sweep to sweep</p>
 </div>
+<p class="mini text-align-center fragment" data-fragment-index="6">How would you represent this data?</p>
 
 --
 <!-- .slide: data-visibility="uncounted" class="optional-slide" -->
@@ -127,7 +130,7 @@ No prior knowledge of autonomous driving is required.
 --
 <!-- .slide: data-visibility="uncounted" class="text-align-center optional-slide" -->
 
-<img class="diagram light-invert" src="./img/neural-network.png" alt="Fully connected network with an input layer, one hidden layer, and an output layer">
+<img class="diagram light-invert" src="./img/neural-network.png" style="height: 20em;" alt="Fully connected network with an input layer, one hidden layer, and an output layer">
 
 --
 <!-- .slide: data-visibility="uncounted" class="optional-slide" -->
@@ -141,6 +144,8 @@ No prior knowledge of autonomous driving is required.
   <li class="fragment" data-fragment-index="3"><strong>Optimizer step</strong>: update parameters in the direction that reduces the loss</li>
 </ul>
 
+<div class="equation fragment" data-fragment-index="4">∂L/∂w = ∂L/∂h · σ′(w<sup>T</sup>x + b) · x</div>
+
 <div class="equation fragment" data-fragment-index="4">θ ← θ − η · ∂L / ∂θ</div>
 
 --
@@ -151,7 +156,7 @@ No prior knowledge of autonomous driving is required.
 - **Local receptive fields**: nearby pixels are strongly related, so each filter initially examines a small neighborhood
 - **Growing context**: stacking layers expands the receptive field—from edges and textures to parts and complete objects
 - **Weight sharing**: the same filter scans every position and can recognize a feature wherever it appears
-- **Parameter efficiency**: a convolution uses <span class="math-inline">k² C<sub>in</sub> C<sub>out</sub></span> parameters, independent of image width and height
+- **Parameter efficiency**: a convolution uses <span class="math-inline">k² · C<sub>in</sub> · C<sub>out</sub></span> parameters, independent of image width and height
 - **Translation equivariance**: shifting the input shifts the feature map instead of requiring the pattern to be relearned
 - **Spatial output**: CNNs preserve feature maps, making them natural backbones for detection and segmentation
 
@@ -201,15 +206,10 @@ No prior knowledge of autonomous driving is required.
 --
 <!-- .slide: data-visibility="uncounted" class="text-align-center optional-slide" -->
 
-<img class="diagram transparent light-invert" src="./img/attention.png" alt="Attention: query-key score matrix, softmax, and weighted sum of values">
-
---
-<!-- .slide: data-visibility="uncounted" class="text-align-center optional-slide" -->
-
 <img class="diagram wide transparent" src="./img/attention-steps.svg" data-light-src="./img/attention-steps-light.svg" alt="Attention in four steps: project tokens to queries, keys, and values; score every query against every key; normalize each row with softmax; mix the values with those weights">
 
 Note:
-Alternative to the previous attention figure: pick one and delete the other. Walk through query 4: it matches key 5 best, so value 5 dominates output 4.
+Walk through query 4: it matches key 5 best, so value 5 dominates output 4.
 
 --
 <!-- .slide: data-visibility="uncounted" class="optional-slide" -->
@@ -218,7 +218,7 @@ Alternative to the previous attention figure: pick one and delete the other. Wal
 
 - **Multi-head attention**: several attention operations run in parallel, each free to specialize in a different relation (appearance, geometry, motion)
 - **Positional encoding**: attention by itself ignores order and position, so each token carries an explicit position—in driving, often a 3D position derived from camera geometry
-- **Quadratic cost**: every query scores every key, so cost grows with <span class="math-inline">N<sub>q</sub> × N<sub>k</sub></span>—<span class="math-inline">O(N²)</span> for self-attention
+- **Quadratic cost**: every query scores every key, so cost grows with <span class="math-inline">N<sub>q</sub> × N<sub>k</sub></span> ~ <span class="math-inline">O(N²)</span> for self-attention
 
 <div class="callout example fragment">
   <span class="tag">Back of the envelope</span>
@@ -284,10 +284,10 @@ Data flows left to right: sensors, localization and perception, prediction, plan
   </div>
   <div class="two-c-col">
     <ul>
-      <li>Observe the surrounding scene</li>
-      <li>Estimate geometry, semantics, and motion</li>
-      <li>Maintain a temporally consistent world state</li>
-      <li>Expose uncertainty—not just confident guesses</li>
+      <li><strong>Where</strong> everything is, in meters rather than pixels</li>
+      <li><strong>What</strong> it is: vehicle, person, lane, or traffic light</li>
+      <li><strong>How it moves</strong>, and that the same object stays the same object over time</li>
+      <li><strong>What we cannot see</strong>, and how sure we are about the rest</li>
     </ul>
   </div>
 </div>
@@ -307,7 +307,7 @@ Perception is not only object detection. Use this slide to set the broad scope: 
     <tr><th>Sensor</th><th>Typical range</th><th>Measures well</th><th>Main weaknesses</th><th>Cost</th></tr>
   </thead>
   <tbody>
-    <tr><td><b>Camera</b></td><td>~150–250 m (optics-dependent)</td><td>color, texture, signs, lights, lanes; 2–17 MP</td><td>no direct depth; glare, night, blur</td><td>$</td></tr>
+    <tr><td><b>Camera</b></td><td>~150–250 m (optics-dependent)</td><td>color, texture, signs, lights, lanes</td><td>no direct depth; glare, night, blur, fog, rain</td><td>$</td></tr>
     <tr><td><b>LiDAR</b></td><td>~100–250 m</td><td>metric 3D geometry, cm-level range; 10–20 Hz</td><td>sparse at range; heavy rain, fog, snow</td><td>$$–$$$</td></tr>
     <tr><td><b>Radar</b></td><td>~200–300 m</td><td>direct radial (Doppler) velocity; works in fog and dark</td><td>coarse angle, few points, multipath “ghosts”</td><td>$</td></tr>
     <tr><td><b>Ultrasonic</b></td><td>~0.2–5 m</td><td>very-near obstacles at parking speed</td><td>tiny range, slow update</td><td>¢</td></tr>
@@ -324,16 +324,17 @@ Perception is not only object detection. Use this slide to set the broad scope: 
 
 ## Same scene, three sensors
 
-<img class="diagram figure-tall" src="./img/nuscenes-same-scene.png" alt="One nuScenes scene seen by six cameras with 3D boxes, and the same scene as radar points, LiDAR points, and the semantic map">
+<iframe class="diagram" data-src="https://www.youtube.com/embed/ym-eRYplU8A?rel=0&modestbranding=1&mute=1" data-autoplay allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen title="Altos Radar and LiDAR point cloud comparison"></iframe>
 
-<div class="source"><a href="https://arxiv.org/abs/1903.11027">nuScenes — Caesar et al., CVPR 2020</a> (Figure 1)</div>
+<div class="source"><a href="https://www.youtube.com/watch?v=ym-eRYplU8A">Altos Radar — radar and LiDAR point cloud comparison</a>, Jan. 5, 2024</div>
 
 <div class="callout quiz fragment"><span class="tag">Food for thought</span><p class="mini">If a camera recognizes a pedestrian but estimates poor depth, while LiDAR sees a shape but not its class—which sensor is “right”?</p></div>
 
 Note:
-Point out that radar gives only a handful of points per object (but each with velocity), LiDAR gives precise geometry, cameras give semantics. Quiz answer: neither alone. Each is right about a different property; fusion must keep the camera's class and the LiDAR's range, and know which one to trust when they disagree.
+The clip compares an Altos V1 4D radar with a Hesai AT128 LiDAR on one drive (South San Francisco Bay, Jan. 5, 2024). Radar points are drawn larger than LiDAR points. Point out how few radar returns there are, and that each one carries velocity, while LiDAR gives the geometry. Quiz answer: neither sensor alone. Each is right about a different property; fusion must keep the useful part of each and know which one to trust when they disagree.
 
 ---
+<!-- .slide: class="hidden-slide" -->
 
 ## Radar is having a moment: 4D imaging radar
 
@@ -366,19 +367,20 @@ Point out that radar gives only a handful of points per object (but each with ve
 ## What the industry chose
 
 - **Waymo (6th generation)**: 13 cameras, 4 LiDARs, 6 radars, and external microphones—redundancy across three modalities
+- **Zoox**: 28 cameras, 16 LiDARs, 20 radars, plus thermal cameras and microphones—the same pod on all four corners, because the vehicle drives equally well in either direction
 - **Tesla Vision**: cameras only—radar removed from 2021, ultrasonic sensors from 2022
 - **nuScenes research car**: 6 cameras, 1 LiDAR, 5 radars, GNSS/IMU
 - Same physics, different bets: cost, scale, operating domain, and how much risk the software must absorb
 
 <div class="callout takeaway fragment"><span class="tag">Design rule</span><p class="mini">Choose sensors from the Operational Design Domain—not from a universal ranking.</p></div>
 
-<div class="source"><a href="https://waymo.com/blog/2024/08/meet-the-6th-generation-waymo-driver">Waymo, Aug 2024</a> · <a href="https://www.tesla.com/support/transitioning-tesla-vision">Tesla Vision transition</a></div>
+<div class="source fragment"><a href="https://waymo.com/blog/2024/08/meet-the-6th-generation-waymo-driver">Waymo, Aug 2024</a> · <a href="https://zoox.com/journal/perception">Zoox perception</a> · <a href="https://www.tesla.com/support/transitioning-tesla-vision">Tesla Vision transition</a> · <a href="https://arxiv.org/abs/1903.11027">nuScenes car — Caesar et al., CVPR 2020</a></div>
 
 Note:
-Reveal after the poll. Ask which of the three poll scenarios each choice fits best. Camera-only bets that learning can recover depth and robustness from data at fleet scale; multi-sensor bets on physical redundancy.
+Reveal after the poll. Ask which of the three poll scenarios each choice fits best. Camera-only bets that learning can recover depth and robustness from data at fleet scale; multi-sensor bets on physical redundancy. Zoox is the extreme of that bet: a bidirectional vehicle, so each corner carries the same cameras, LiDAR, radar, thermal camera, and microphones. The 28/16/20 counts come from Zoox's published corner-pod layout.
 
 ---
-<!-- .slide: class="section-slide" -->
+<!-- .slide: class="section-slide hidden-slide" -->
 
 # Four severe problems  
 ### that deserve lectures of their own
@@ -387,6 +389,7 @@ Calibration · synchronization · ego-motion · failure handling
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Calibration and coordinate frames
 
 <div class="two-c-container">
@@ -415,11 +418,11 @@ Calibration · synchronization · ego-motion · failure handling
 - Past features must be warped into a common frame before temporal fusion
 - Failure handling needs detection, degradation, and a safe fallback
 
-<div class="failure-row">
+<div class="failure-row fragment">
   <span>timestamp drift</span><span>rolling shutter</span><span>packet loss</span><span>occlusion</span><span>dirty lens</span>
 </div>
 
-<div class="callout activity"><span class="tag">Take seriously</span><p class="mini">A 100 ms timing error at 90 km/h is 2.5 m of travel—what the car covers during one 10 Hz LiDAR sweep. “Almost synchronized” can be geometrically wrong.</p></div>
+<div class="callout activity fragment"><span class="tag">Take seriously</span><p class="mini">A 100 ms timing error at 90 km/h is 2.5 m of travel—what the car covers during one 10 Hz LiDAR sweep. “Almost synchronized” can be geometrically wrong in a drastic way.</p></div>
 
 Note:
 Do not teach calibration in depth here. Emphasize that every later architecture quietly assumes these foundations are sufficiently correct. Without motion compensation, the start and end of a single LiDAR sweep at highway speed disagree by meters.
@@ -433,18 +436,48 @@ Do not teach calibration in depth here. Emphasize that every later architecture 
 
 ---
 
-## Image space and point clouds
+## Image space, BEV, and point clouds
 
-- **Perspective images**
-  - Dense semantics; scale changes with depth; occlusion is natural
+- **Image space**
+  - Dense color and texture, but scale shrinks with depth and near objects hide the rest
+  - A pixel is a direction, not a distance
+- **BEV space**
+  - A top-down grid fixed to the ego vehicle, with one cell size at every range
+  - Can be 2D (cell-based) or 3D (voxel-based), depending on the task
+  - The shared frame for cameras, LiDAR, maps, and planning
 - **Point clouds**
-  - Metric 3D samples; irregular and sparse; density changes with range
+  - Irregular 3D samples, already in meters, with no grid and no natural order
+  - Sparse, and sparser with range: hundreds of LiDAR points on a car at 10 m, often fewer than five past 50 m. Radar stays near one return per object
 
-<img class="diagram medium" src="./img/nuscenes-points-vs-range.png" alt="Number of LiDAR and radar points inside annotated objects versus distance on nuScenes">
+<div class="source fragment"><a href="https://arxiv.org/abs/1903.11027">nuScenes — Caesar et al., CVPR 2020</a> (supplementary)</div>
 
-<p class="mini muted">LiDAR points inside an object: hundreds at 10 m, fewer than five beyond 50 m. Radar: about one, at any range.</p>
+---
 
-<div class="source"><a href="https://arxiv.org/abs/1903.11027">nuScenes — Caesar et al., CVPR 2020</a> (supplementary)</div>
+## What each one looks like
+
+<div class="output-grid three">
+
+<div>
+<b>Image space</b>
+<img src="./img/rep-image.jpg" alt="Front camera of a city intersection, with 3D boxes drawn in perspective">
+<small>Near cars fill the frame. The crosswalk, just as real, is a thin band of pixels.</small>
+</div>
+
+<div>
+<b>BEV space</b>
+<img src="./img/rep-bev.jpg" alt="Top-down grid of lanes and drivable area">
+<small>A top-down grid: lanes and drivable surface, the same meters per cell near and far.</small>
+</div>
+
+<div>
+<b>Point cloud</b>
+<img src="./img/rep-points.jpg" alt="One LiDAR sweep seen from above, dense near the vehicle and sparse farther out">
+<small>One sweep from above. Dense rings nearby, thin returns in the distance.</small>
+</div>
+
+</div>
+
+<div class="source">Image and LiDAR: <a href="https://arxiv.org/abs/1903.11027">nuScenes — Caesar et al., CVPR 2020</a>. BEV grid: <a href="https://arxiv.org/abs/2205.13542">BEVFusion — Liu et al., ICRA 2023</a>. Three different drives.</div>
 
 ---
 
@@ -457,7 +490,7 @@ Do not teach calibration in depth here. Emphasize that every later architecture 
 
 <div class="equation fragment">f(x<sub>1</sub>, …, x<sub>N</sub>) = γ( max<sub>i</sub> h(x<sub>i</sub>) ) — same answer for any ordering of the points</div>
 
-<div class="source">
+<div class="source fragment">
   <a href="https://arxiv.org/abs/1612.00593">PointNet — CVPR 2017</a> ·
   <a href="https://arxiv.org/abs/1711.06396">VoxelNet — CVPR 2018</a> ·
   <a href="https://www.mdpi.com/1424-8220/18/10/3337">SECOND — Sensors 2018</a> ·
@@ -468,12 +501,12 @@ Do not teach calibration in depth here. Emphasize that every later architecture 
 
 ## Bird’s-eye view (BEV)
 
-- A metric top-down grid around the ego vehicle
-- Aligns multiple cameras and sensors into one spatial frame
-- Makes size, distance, and motion easier to compare
-- Friendly to mapping, occupancy, prediction, and planning
+- Image space has no meters, and a point cloud has no grid. BEV is the metric grid both can share
+- It is where the sensors meet: cameras arrive through a view transform, LiDAR and radar through pillars or voxels
+- In that grid a vehicle keeps its true size at 10 m and at 50 m, so distance and motion compare directly
+- It is the representation of choice for most of the tasks ahead: detection, tracking, mapping, and forecasting. Occupancy keeps a 3D volume
 
-<div class="thought">BEV is not a task. It is a meeting room where many tasks can argue in the same coordinate system.</div>
+<div class="thought fragment">BEV is not a task. It is the coordinate system the other tasks share.</div>
 
 ---
 
@@ -483,11 +516,11 @@ Do not teach calibration in depth here. Emphasize that every later architecture 
 - **Lift-Splat (forward projection)**: predict a depth distribution per pixel, lift features along each ray, and splat them into BEV cells
 - **BEV queries (backward projection)**: each BEV cell projects 3D reference points into the cameras and pulls the features it needs
 
-<div class="equation fragment">lift: f(u, v, d) = α<sub>d</sub>(u, v) · c(u, v), with α a softmax over D depth bins</div>
+<div class="equation fragment">lift: f(u, v, d) = α<sub>d</sub>(u, v) · c(u, v) — c(u, v) is the feature vector at that pixel, α a softmax over D depth bins</div>
 
 <p class="thought fragment">The hard part is always depth: a pixel is a ray, not a point.</p>
 
-<div class="source">
+<div class="source fragment">
   <a href="https://arxiv.org/abs/2008.05711">Lift, Splat, Shoot — Philion & Fidler, ECCV 2020</a> ·
   <a href="https://arxiv.org/abs/2203.17270">BEVFormer — Li et al., ECCV 2022</a>
 </div>
@@ -496,17 +529,22 @@ Do not teach calibration in depth here. Emphasize that every later architecture 
 
 ## BEVFormer: camera features → BEV queries
 
-<img class="diagram wide" src="./img/bevformer.svg" data-light-src="./img/bevformer-light.svg" alt="BEVFormer spatial and temporal attention">
 
-- Grid-shaped BEV queries define positions in the ego-centric world
-- Spatial cross-attention samples relevant multi-camera image features
-- Temporal self-attention fuses aligned previous BEV features
-- A shared BEV can support 3D detection and map segmentation
 
-<div class="source"><a href="https://arxiv.org/abs/2203.17270">BEVFormer — Li et al., ECCV 2022</a></div>
+- **BEV queries**: one learned vector per cell, each responsible for a fixed (x, y) around the ego vehicle
+- **Spatial cross-attention**: the cell projects into the cameras that can see it and samples image features at several heights
+- **Temporal self-attention**: ego motion brings the previous BEV into the current frame, and each cell attends to its location there
+- **One grid, two heads**: 3D boxes and the map are both read out of this BEV
 
 Note:
 This is backward projection in practice. Deformable attention keeps the cost manageable: each BEV query samples only a few points around its projected reference points (the quadratic-cost problem from the refresher).
+
+---
+## BEVFormer architecture
+
+<img class="diagram" src="./img/bevformer-arch.png" alt="BEVFormer architecture: multi-camera features, spatial cross-attention, and temporal self-attention">
+
+<div class="source"><a href="https://arxiv.org/abs/2203.17270">BEVFormer — Li et al., ECCV 2022</a></div>
 
 ---
 
@@ -533,19 +571,19 @@ This is backward projection in practice. Deformable attention keeps the cost man
 
 ## Perception tasks
 
-- **Entities** — detection and tracking
-- **Fields** — segmentation, free space, occupancy
-- **Structure** — mapping, topology, association
-- **Futures** — motion forecasting and occupancy flow
-- **Cross-cutting** — multimodal fusion and multitask learning
+- **Entities (Boxes)** — detection and tracking
+- **Fields (Grid)** — segmentation, free space, occupancy
+- **Structure (Graph)** — mapping, topology, association
+- **Futures (Distribution)** — motion forecasting and occupancy flow
+- **Cross-cutting** — multitask learning, with planning in the loop
 
-<div class="callout takeaway"><span class="tag">Structure</span><p class="mini">We will study each task through its output, architecture idea, failure modes, datasets, and a small project.</p></div>
+<div class="callout takeaway fragment"><span class="tag">Structure</span><p class="mini">We will study each task through its output, architecture idea, failure modes, datasets, and small project ideas.</p></div>
 
 ---
 <!-- .slide: class="section-slide" -->
 
 # Task 1 — Obstacles
-### Detect, localize, classify, persist
+### Detect · localize · classify · persist
 
 ---
 
@@ -556,32 +594,51 @@ This is backward projection in practice. Deformable attention keeps the cost man
 - Often extended with velocity <span class="math-inline">(v<sub>x</sub>, v<sub>y</sub>)</span>, attributes, and uncertainty
 - Must handle scale, occlusion, truncation, crowded scenes, and long range
 
-<img class="diagram strip" src="./img/nuscenes-example.png" alt="Six nuScenes camera views with annotated 3D boxes for cars and pedestrians">
+<img class="diagram strip fragment" src="./img/OD.jpg" alt="Six nuScenes camera views with annotated 3D boxes for cars and pedestrians plus same boxes on BEV map">
 
-<div class="source">Annotated nuScenes sample — <a href="https://github.com/nutonomy/nuscenes-devkit">nuScenes devkit</a></div>
+<div class="source fragment">Figure from <a href="https://arxiv.org/abs/2510.10287v1">Käppeler et al., arXiv preprint (2025)</a></div>
 
 ---
 
-## DETR: detection as set prediction
+## Classic detection: one box per object
 
-<div class="two-c-container">
-  <div class="two-c-col">
-    <img class="diagram" src="./img/detr.svg" data-light-src="./img/detr-light.svg" alt="Simplified DETR architecture">
-  </div>
-  <div class="two-c-col">
-    <ol>
-      <li class="fragment" data-fragment-index="1">Backbone extracts image features</li>
-      <li class="fragment" data-fragment-index="2">Transformer mixes global context</li>
-      <li class="fragment" data-fragment-index="3">Object queries decode candidate objects</li>
-      <li class="fragment" data-fragment-index="4">One-to-one matching trains the set</li>
-    </ol>
-  </div>
+- **Faster R-CNN (2015)**: two stages. Anchors propose candidate boxes, then a second head classifies and refines each one
+- **YOLO (2016)**: one stage. Divide the image into a grid and predict the boxes in a single forward pass
+- **SSD (2016)**: the same one-stage idea on feature maps at several scales, so small and large objects share one network
+- All three emit many overlapping boxes. Non-maximum suppression then keeps a single box per object
+
+<div class="source fragment">
+  <a href="https://arxiv.org/abs/1506.01497">Faster R-CNN — Ren et al., NIPS 2015</a> ·
+  <a href="https://arxiv.org/abs/1506.02640">YOLO — Redmon et al., CVPR 2016</a> ·
+  <a href="https://arxiv.org/abs/1512.02325">SSD — Liu et al., ECCV 2016</a>
 </div>
 
-<div class="source"><a href="https://arxiv.org/abs/2005.12872">DETR — Carion et al., ECCV 2020</a></div>
+---
+
+## DETR: a fixed set of queries
+
+- **A fixed output**: the decoder has N queries, and every query predicts a class and a box on every image. The COCO model uses N = 100
+- **One object, one query**: Hungarian matching finds the pairing with the lowest total cost. A pair costs how wrong the class is plus how wrong the box is, and each object is given to a single query
+- **Queries left over**: with fewer objects than queries, the extras are trained to predict “no object”, and inference discards them
+- **The limit**: with more objects than queries, one object gets no query and is missed. N is chosen larger than the crowds in the training set
+
+<div class="thought fragment">The queries are interchangeable. The assignment decides who takes which object, and that one-to-one rule is what keeps the set free of duplicates.</div>
+
+<div class="source fragment"><a href="https://arxiv.org/abs/2005.12872">DETR — Carion et al., ECCV 2020</a></div>
 
 ---
 
+## DETR architecture
+
+<img class="diagram wide" src="./img/detr-arch.png" alt="DETR architecture: a CNN backbone, a transformer encoder, a decoder fed by object queries, and prediction heads that output a class and a box or no object">
+
+<p class="mini muted">Object queries enter the decoder. Each head emits a class and a box, or “no object”.</p>
+
+<div class="source">Architecture figure: <a href="https://arxiv.org/abs/2005.12872">Carion et al., ECCV 2020</a></div>
+
+---
+
+<!-- .slide: class="hidden-slide" -->
 ## Why Hungarian matching matters
 
 <div class="equation">σ̂ = arg min<sub>σ</sub> Σ<sub>i</sub> L<sub>match</sub>(y<sub>i</sub>, ŷ<sub>σ(i)</sub>)</div>
@@ -591,7 +648,7 @@ This is backward projection in practice. Deformable attention keeps the cost man
 - Removes ambiguous many-to-one supervision
 - Inspired a family of query-based detectors, trackers, and map models
 
-<div class="thought">Queries are reusable slots, not tiny object templates waiting at fixed locations.</div>
+<div class="thought fragment">Queries are reusable slots, not tiny object templates waiting at fixed locations.</div>
 
 ---
 
@@ -604,7 +661,7 @@ This is backward projection in practice. Deformable attention keeps the cost man
 
 <p class="thought fragment">Same trick each time: a query asks the cameras where its 3D point appears.</p>
 
-<div class="source">
+<div class="source fragment">
   <a href="https://arxiv.org/abs/2006.11275">CenterPoint — CVPR 2021</a> ·
   <a href="https://arxiv.org/abs/2110.06922">DETR3D — CoRL 2021</a> ·
   <a href="https://arxiv.org/abs/2203.05625">PETR — ECCV 2022</a> ·
@@ -623,13 +680,13 @@ This is backward projection in practice. Deformable attention keeps the cost man
 
 <div class="equation fragment">predict x̂<sub>t</sub> = F x<sub>t−1</sub> &nbsp;→&nbsp; Hungarian match to detections &nbsp;→&nbsp; Kalman update</div>
 
-<div class="source">
+<div class="source fragment">
   <a href="https://arxiv.org/abs/1907.03961">AB3DMOT — Weng et al., IROS 2020</a> ·
   <a href="https://arxiv.org/abs/2105.03247">MOTR — Zeng et al., ECCV 2022</a>
 </div>
 
 ---
-
+<!-- .slide: class="no-fragments" -->
 ## Try it yourself: detection & tracking
 
 - **Datasets:** [KITTI](https://www.cvlibs.net/datasets/kitti/), [BDD100K](https://bdd-data.berkeley.edu/), [nuScenes](https://www.nuscenes.org/nuscenes) (start with nuScenes-mini: 10 scenes), [Waymo Open](https://waymo.com/open/)
@@ -653,22 +710,18 @@ This is backward projection in practice. Deformable attention keeps the cost man
 - **Free space:** where the ego vehicle can physically move without collision
 - **Drivable area:** free space constrained by road rules and semantics
 
-<div class="callout quiz"><span class="tag">Important distinction</span><p class="mini">An empty sidewalk may be free of obstacles, but it is not necessarily drivable.</p></div>
+<div class="callout activity fragment"><span class="tag">Important distinction</span><p class="mini">An empty sidewalk may be free of obstacles, but it is not necessarily drivable.</p></div>
+
+<div class="callout quiz fragment"><span class="tag">Quick quiz</span><p class="mini">Is the opposite lane, if no vehicle is present, free space? Is it drivable area?</p></div>
 
 ---
 
 ## 3D semantic occupancy
 
-- Predict every voxel/cell as free, occupied, semantic class, or unknown
-- Represents irregular obstacles that do not fit a box
-- Makes occlusion and visibility explicit
-- Costs memory and compute; labels are expensive
-
-<img class="diagram strip" src="./img/occ3d-visibility-mask.jpg" alt="Occ3D-nuScenes top view: semantic voxel labels, then the same scene with voxels unobserved by LiDAR and by the camera masked out">
-
-<p class="mini muted">Semantic labels (left), LiDAR visibility (middle), camera visibility (right): gray voxels were never observed by LiDAR, white ones are hidden from the current camera.</p>
-
-<div class="source"><a href="https://arxiv.org/abs/2304.14365">Occ3D — Tian et al., NeurIPS 2023</a> · figure from <a href="https://github.com/Tsinghua-MARS-Lab/Occ3D">Tsinghua-MARS-Lab/Occ3D</a></div>
+- Predict every voxel as free, occupied, unknown, or a class such as road, sidewalk, or vehicle
+- Holds the shapes a box cannot: cones, curbs, debris, and the edge of a sidewalk
+- Makes occlusion and visibility explicit: an unseen cell stays unknown instead of silently empty
+- Costs memory and compute, and labeling every voxel is expensive
 
 ---
 
@@ -681,7 +734,7 @@ This is backward projection in practice. Deformable attention keeps the cost man
 <div class="source">Demo video: <a href="https://github.com/weiyithu/SurroundOcc">SurroundOcc — Wei et al., ICCV 2023</a></div>
 
 ---
-
+<!-- .slide: class="hidden-slide" -->
 ## PanoOcc: a unified occupancy representation
 
 - Camera-based 3D panoptic scene understanding
@@ -689,53 +742,69 @@ This is backward projection in practice. Deformable attention keeps the cost man
 - Produces semantic occupancy and instance-aware outputs
 - Good example of replacing separate dense tasks with one spatial representation
 
-<div class="source"><a href="https://openaccess.thecvf.com/content/CVPR2024/html/Wang_PanoOcc_Unified_Occupancy_Representation_for_Camera-Based_3D_Panoptic_Segmentation_CVPR_2024_paper.html">PanoOcc — Wang et al., CVPR 2024</a></div>
+<div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2024/html/Wang_PanoOcc_Unified_Occupancy_Representation_for_Camera-Based_3D_Panoptic_Segmentation_CVPR_2024_paper.html">PanoOcc — Wang et al., CVPR 2024</a></div>
 
 ---
 
 ## SparseOcc: efficiency changes the formulation
 
-- Dense 3D volumes spend compute on mostly empty space
-- Sparse queries and sparse sampling focus on likely occupied regions
-- Introduces **RayIoU**: voxel mIoU penalizes depth errors inconsistently and can be gamed by predicting thick surfaces; RayIoU casts rays and scores the class and depth of the first occupied voxel
-- Reported real-time inference demonstrates why representation cost matters
+- Dense volumes spend most of their compute on empty air
+- SparseOcc keeps about 5% of the voxels, the ones likely to be occupied, and sparse queries label only those
+- **RayIoU** casts a ray and scores the class and depth of the first hit. Voxel mIoU can still look good when that surface is thick and at the wrong distance
+- Seven past frames, cameras only: 34.0 RayIoU on Occ3D-nuScenes, at 17.3 FPS on an A100
 
-<div class="source"><a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/html/3570_ECCV_2024_paper.php">Fully Sparse 3D Occupancy Prediction — ECCV 2024</a></div>
+<p class="thought fragment">A perfect representation that misses the real-time deadline is a very detailed description of the recent past.</p>
 
-<p class="thought">A perfect representation that misses the real-time deadline is a very detailed description of the recent past.</p>
+<div class="source fragment"><a href="https://arxiv.org/abs/2312.17118">SparseOcc — Liu et al., ECCV 2024</a></div>
+
+---
+
+## SparseOcc in the scene
+
+<img class="diagram figure-tall" src="./img/sparseocc-viz.png" alt="Semantic occupancy comparison: two dense models predict thick surfaces, SparseOcc keeps a thin sparse surface close to the ground truth, including a traffic cone">
+
+<p class="mini muted">Same scenes, top to bottom: two dense models, SparseOcc, and the ground truth. SparseOcc drops more than 90% of the voxels and still keeps the cone.</p>
+
+<div class="source">Figure: <a href="https://arxiv.org/abs/2312.17118">Liu et al., ECCV 2024</a></div>
 
 ---
 
 ## Current, dynamic, and future occupancy
 
-- **Current occupancy:** what fills space now?
-- **Dynamic state:** which cells move, and how?
-- **Future occupancy:** where may occupied space move?
-- Occupancy flow predicts motion over dense space
-- Useful for objects that are hard to detect or classify
-- Must separate unknown/unobserved from confidently free
+- **Now:** which voxels are filled, and by what: road, sidewalk, curb, cone, or vehicle
+- **Motion:** which of those cells are moving, and how fast. A curb stays put; a cone in the lane may not
+- **The next few seconds:** where the occupied cells will be
+- Occupancy flow gives the cells a velocity, so debris gets a trajectory without ever becoming a box
+- An unseen cell stays unknown in that forecast. Treating it as empty is a plan through whatever was hiding there
+
+<div class="thought fragment">The grid can carry an obstacle you have not classified yet.</div>
 
 ---
+<!-- .slide: class="no-fragments" -->
 
 ## Try it yourself: occupancy & free space
 
-- **Datasets:** [Occ3D-nuScenes](https://github.com/Tsinghua-MARS-Lab/Occ3D), [SemanticKITTI](http://www.semantic-kitti.org/), [OpenOccupancy](https://github.com/JeffWang987/OpenOccupancy)
-- **Toolkits:** [MMDetection3D](https://github.com/open-mmlab/mmdetection3d) and the public SurroundOcc / SparseOcc code bases
-- **Colab-sized:** build a lightweight image free-space baseline
-- **Evaluation idea:** compare IoU under rain/night or visibility masks
-- **Extension:** distill a small occupancy network or compare dense and sparse representations
+- **Datasets:** [Occ3D-nuScenes](https://github.com/Tsinghua-MARS-Lab/Occ3D) (the grids in the videos), [SemanticKITTI](http://www.semantic-kitti.org/) (LiDAR, over time), [OpenOccupancy](https://github.com/JeffWang987/OpenOccupancy)
+- **Toolkits:** [SurroundOcc](https://github.com/weiyithu/SurroundOcc) and [SparseOcc](https://github.com/MCG-NJU/SparseOcc), both built on [MMDetection3D](https://github.com/open-mmlab/mmdetection3d)
+- **Colab-sized:** label one camera frame as drivable, sidewalk, or obstacle, and compare it with the Occ3D grid of the same instant
+- **Evaluation idea:** score the same prediction with voxel mIoU and with RayIoU. A thick surface can win the first and lose the second
+- **Extension:** on one scene, compare a dense grid with SparseOcc: how many voxels each keeps, and whether the cone is still there
 
 ---
-<!-- .slide: class="section-slide" -->
+<!-- .slide: class="section-slide break-slide" -->
 
 # Break
 
-### 10 minutes
+<div class="break-timer" data-minutes="10">
+  <button type="button" class="break-timer-step" data-step="-60" aria-label="Remove one minute">−</button>
+  <button type="button" class="break-timer-display" aria-live="polite">10:00</button>
+  <button type="button" class="break-timer-step" data-step="60" aria-label="Add one minute">+</button>
+</div>
 
-<p class="thought">Your eyes just ran a perception stack for an hour: stereo depth, motion, semantics, and a very aggressive attention mechanism. Let them rest.</p>
+<p class="thought">Your brain just ran a perception stack for an hour: stereo depth, motion, semantics, and a very aggressive attention mechanism.<br>Let it rest!</p>
 
 Note:
-Halfway point: sensors, representations, detection/tracking, and occupancy are done. After the break: mapping, forecasting, fusion, evaluation, risks, frontiers.
+Click the time to start or pause the countdown. It stays at 10:00 until you do. − and + change it by one minute, including while it is running. At 00:00, click the time to start another countdown of the length you set. Halfway point: sensors, representations, detection/tracking, and occupancy are done. After the break: mapping, forecasting, fusion, evaluation, risks, frontiers.
 
 ---
 <!-- .slide: class="section-slide" -->
@@ -745,35 +814,105 @@ Halfway point: sensors, representations, detection/tracking, and occupancy are d
 
 ---
 
-## Which “mapping” do we mean?
+## How mapping is organized
 
-- **Offline HD-map creation:** build and maintain a global map
-- **Localization:** estimate ego pose relative to that map
-- **Online local mapping:** perceive nearby lanes and boundaries now
-- **Map-change detection:** identify construction or stale map content
+- **Offline mapping:** survey the roads once, annotate a global map, and carry that file in the car
+- **Localization:** estimate the ego pose in that map, so its lanes and lights land in the sensor frame
+- **Online mapping:** perceive the local map from the sensors now, where the stored map is missing or wrong
+- **Vectorized vs grid:** polylines and polygons a planner can follow, or a BEV raster a network paints. The same road can be stored as both
+- **Association:** which lanes connect, and which light, sign, or rule governs which lane
 
-<div class="thought">A map is a prior, not a law of nature. Roads have an inconvenient habit of changing.</div>
+---
+
+## Maps can be of different types
+
+- **HD map:** centimeter lanes, boundaries, crossings, signs, and lights, tied to a global frame. This is the offline map that localization reads
+- **SD map:** the navigation graph, at the scale of roads rather than lanes. It says where the trip goes, not which lane to occupy
+- **Topology map:** which lanes connect, and which signal controls which lane. It can be stored in the HD map or inferred on the spot
+- **Online local map:** lanes and boundaries perceived now, in the ego frame, from the sensors alone
+
+---
+
+## Offline HD maps
+
+- A survey fleet drives the roads. Annotators turn the logs into lanes, boundaries, crossings, signs, and lights in a global frame
+- The file also carries the rules attached to that geometry: speed, turn restrictions, and which light owns which lane
+- The car carries the file. Updating it means another survey and another annotation pass
+- Construction, a new crosswalk, or a repainted lane leaves the car with a confident description of a road that is no longer there
+
+<div class="thought fragment">A map is a prior, not a law of nature. Roads have the inconvenient habit of changing.</div>
+
+---
+
+## Localization on an HD map
+
+- The HD map is in a global frame and the sensors are on the car. Localization is the pose that puts one into the other
+- GNSS in a city is often meters off. A lane is only a few meters wide, so that error can select the wrong lane
+- **LocNet** learns whether a live LiDAR sweep (or a camera image) matches a place in a previously built point-cloud map, then estimates the metric pose from range
+- That pose lays the HD map’s lanes, lights, and topology into the ego frame. Online mapping, next, is for when the prior is missing or stale
+
+<div class="source fragment"><a href="https://arxiv.org/abs/1712.02165">LocNet — Yin et al., IV 2018</a></div>
+
+Note:
+LocNet’s stored map is a 3D point cloud, not the vector lanes themselves. The pose it recovers is what makes the HD map readable in the ego frame. Do not describe it as matching lane polylines.
+
+---
+
+## LocNet architecture
+
+<img class="diagram wide" src="./img/locnet-arch.png" alt="LocNet framework: LiDAR sweeps become fingerprints stored in a kd-tree, and a live sweep is matched, then refined by a particle filter and ICP">
+
+<p class="mini muted">Map building stores LiDAR fingerprints. Localization retrieves a place, then a particle filter and ICP turn it into a pose.</p>
+
+<div class="source">Architecture figure: <a href="https://arxiv.org/abs/1712.02165">Yin et al., IV 2018</a></div>
+
+---
+
+## Neural Map Prior: a map that keeps learning
+
+- A global neural map, stored as sparse tiles, sits between a frozen HD file and a purely online prediction
+- The local model cross-attends to the tile for this place, so an earlier traversal fills in what the current cameras cannot see
+- A learned fusion step writes today’s features back into the tile. The prior gets stronger as the fleet repeats the same roads
+- Bad weather and longer range are where it helps. A change no vehicle has observed yet is still missing from the tile
+
+<div class="source fragment"><a href="https://arxiv.org/abs/2304.08481">Neural Map Prior — Xiong et al., CVPR 2023</a></div>
+
+---
+
+## Neural Map Prior architecture
+
+<img class="diagram wide" src="./img/nmp-arch.png" alt="Neural Map Prior architecture: local BEV features cross-attend to prior map tiles, a GRU fuses them, and the result is written back into the global tile">
+
+<p class="mini muted">Current BEV features query the stored tile. The fused map is written back for the next traversal.</p>
+
+<div class="source">Architecture figure: <a href="https://arxiv.org/abs/2304.08481">Xiong et al., CVPR 2023</a></div>
 
 ---
 
 ## MapTRv2: a map as structured sets
 
-<img class="diagram wide" src="./img/maptr.svg" data-light-src="./img/maptr-light.svg" alt="MapTR vector map query diagram">
+- **Polylines, not pixels:** each lane, divider, crossing, and road boundary is an ordered list of points
+- **Two query levels:** one query owns the element, and a set of point queries places the vertices along it
+- **Either direction is valid:** a lane read left to right is the same lane read right to left, and the loss accepts both
+- **One element, one prediction:** Hungarian matching gives each ground-truth polyline to a single query, as DETR did for boxes
 
-- Predict vectorized map elements directly: lanes, dividers, crossings, boundaries
-- Hierarchical queries model instances and ordered points
-- Permutation-equivalent modeling handles multiple valid point orderings
-- One-to-one matching extends the DETR idea from boxes to polylines
+<div class="source fragment"><a href="https://link.springer.com/article/10.1007/s11263-024-02235-z">MapTRv2 — Liao et al., IJCV 2025</a> · <a href="https://arxiv.org/abs/2308.05736">arXiv</a></div>
 
-<div class="source"><a href="https://link.springer.com/article/10.1007/s11263-024-02235-z">MapTRv2 — Liao et al., IJCV 2025</a> · <a href="https://arxiv.org/abs/2308.05736">arXiv</a></div>
+---
+
+## MapTRv2 architecture
+
+<img class="diagram figure-tall" src="./img/maptrv2-arch.png" alt="MapTRv2 architecture: camera or LiDAR features become a BEV, and hierarchical instance and point queries decode vector map elements">
+
+<p class="mini muted">Cameras or LiDAR become a BEV. One query per map element, and one per point along it, decode the polylines.</p>
+
+<div class="source">Architecture figure: <a href="https://arxiv.org/abs/2308.05736">Liao et al., IJCV 2025</a></div>
 
 ---
 
 ## Online mapping in action
 
 <video class="diagram" data-autoplay muted loop playsinline src="./videos/maptr-demo.mp4"></video>
-
-<p class="mini muted">Six cameras in; predicted vector map (PRED) next to the ground truth (GT): dividers, boundaries, and pedestrian crossings.</p>
 
 <div class="source">Demo video: <a href="https://github.com/hustvl/MapTR">hustvl/MapTR</a></div>
 
@@ -783,15 +922,16 @@ Halfway point: sensors, representations, detection/tracking, and occupancy are d
 
 - Geometry alone does not say which lanes connect
 - A traffic light must be linked to the lane(s) it controls
+- A traffic sign is the same problem one step further: the rule has to be tied to the centerlines it governs
 - Scene graphs encode lane ↔ lane and lane ↔ traffic-element relations
 - Association errors can be more dangerous than small geometric errors
 
-<div class="callout activity fragment"><span class="tag">Food for thought</span><p class="mini">The light is detected perfectly. It is associated with the wrong lane. Is perception correct?</p></div>
+<div class="callout activity fragment"><span class="tag">Food for thought</span><p class="mini">What matters more, the map or the association? Would you rather have errors in the lanes, or a perfect lane tied to the wrong traffic light?</p></div>
 
-<div class="source"><a href="https://arxiv.org/abs/2304.10440">OpenLane-V2 — topology benchmark</a></div>
+<div class="source fragment"><a href="https://arxiv.org/abs/2304.10440">OpenLane-V2 — topology benchmark</a> · <a href="https://arxiv.org/abs/2410.23780">Driving by the Rules — Chang et al., CVPR 2025</a></div>
 
 Note:
-Intended answer: no. For the planner, "which lane does this light control" is part of the perception output; a perfect detection with a wrong association still produces a wrong decision (stopping in a green lane, or worse, going on a red one). This is why OpenLane-V2 scores lane-to-traffic-element topology separately.
+Leave this open. A wrong light-to-lane link is the error you feel first: you enter on red, or stop in a green lane. A missing or crooked lane is the error that removes the thing you would associate, which is the point of the next slide. OpenLane-V2 scores the links separately from the geometry. MapDR asks the same question for a sign's rule and the centerlines it governs.
 
 ---
 
@@ -804,10 +944,20 @@ Intended answer: no. For the planner, "which lane does this light control" is pa
 
 <p class="thought fragment">A traffic light you never detected cannot be associated with anything.</p>
 
-<div class="source"><a href="https://arxiv.org/abs/2310.06753">TopoMLP — Wu et al., ICLR 2024</a></div>
+<div class="source fragment"><a href="https://arxiv.org/abs/2310.06753">TopoMLP — Wu et al., ICLR 2024</a></div>
 
 ---
 
+## TopoMLP in the scene
+
+<img class="diagram wide" src="./img/topomlp-example.png" alt="TopoMLP lane-to-traffic association: prediction beside ground truth, with lines linking each lane to the traffic element that controls it">
+
+<p class="mini muted">Front view, prediction beside ground truth. Each line ties a lane to the traffic element that controls it. Red is the prediction, green is the ground truth.</p>
+
+<div class="source">Figure: <a href="https://arxiv.org/abs/2310.06753">Wu et al., ICLR 2024</a></div>
+
+---
+<!-- .slide: class="no-fragments" -->
 ## Try it yourself: mapping & topology
 
 - **Datasets:** [Argoverse 2](https://www.argoverse.org/av2.html), [OpenLane-V2](https://github.com/OpenDriveLab/OpenLane-V2), nuScenes maps
@@ -826,12 +976,19 @@ Intended answer: no. For the planner, "which lane does this light control" is pa
 
 ## What are other agents likely to do?
 
-- Input: agent history, map context, traffic state, interactions
-- Output: multiple future trajectories and their probabilities
+- **Input:** agent history, map context, traffic state, interactions
+- **Output:** multiple future trajectories and their probabilities
 - Horizon matters: 1 second is control; 6+ seconds is intent and interaction
 - Forecasting sits at the boundary between perception and planning
+  - Some may argue that ego forecasting is actually planning from a different perspective.
 
-<img class="diagram medium" src="./img/forecasting.svg" data-light-src="./img/forecasting-light.svg" alt="Multimodal motion forecasting trajectories">
+---
+
+## Why forecasting is important
+
+<img class="diagram medium" src="./img/forecasting.svg" data-light-src="./img/forecasting-light.svg" alt="Ego stopped at a four-exit roundabout while a vehicle on the left may leave on the ego road, probability 0.40, stay in the circle, probability 0.35, or take the left exit, probability 0.25">
+
+<div class="callout activity fragment"><span class="tag">Food for thought</span><p class="mini">Will you enter the roundabout or wait?<br>What is a threshold for probability you would mark as secure?<br>What is the cost of waiting?</p></div>
 
 ---
 
@@ -850,47 +1007,50 @@ Intended answer: no. For the planner, "which lane does this light control" is pa
 
 <div class="two-c-container">
   <div class="two-c-col">
-    <h4>At an intersection</h4>
-    <ul><li>go straight</li><li>turn left</li><li>yield or stop</li></ul>
+    <h4>One trajectory, one place</h4>
+    <ul>
+      <li>The vehicle may take your lane, stay in the circle, or exit left</li>
+      <li>Six seconds later those are three different positions</li>
+      <li>A single output keeps one of them. The planner never sees the other two</li>
+    </ul>
   </div>
   <div class="two-c-col">
     <h4>A useful model needs</h4>
-    <ul><li>diverse modes</li><li>reasonable probabilities</li><li>social consistency</li></ul>
-  </div>
-</div>
-
-<div class="callout takeaway"><span class="tag">Multimodality #2</span><p class="mini">Sensor multimodality means camera + LiDAR + radar. Forecast multimodality means several plausible futures.</p></div>
-
----
-
-## QCNet: query-centric forecasting
-
-<div class="two-c-container">
-  <div class="two-c-col">
     <ul>
-      <li><strong>Agent-centric</strong>: invariant, but recomputed per agent; <strong>scene-centric</strong>: shared, but not invariant</li>
-      <li>QCNet gets both: each element lives in its own local frame, and attention uses relative positions</li>
-      <li>Trajectory queries decode several futures, then refine them</li>
-      <li>A reusable recipe: geometric invariance + queries</li>
+      <li><strong>Diverse modes</strong> — the real maneuvers are in the set</li>
+      <li><strong>Reasonable probabilities</strong> — 0.40 is heavier than 0.25</li>
+      <li><strong>Social consistency</strong> — your move and theirs can happen together</li>
     </ul>
   </div>
-  <div class="two-c-col-l">
-    <img class="diagram" src="./img/qcnet-viz.png" alt="QCNet predictions on Argoverse 2 intersections: several candidate trajectories per agent over the lane map">
-  </div>
 </div>
-
-<div class="source"><a href="https://arxiv.org/abs/2306.10563">QCNet — Zhou et al., CVPR 2023</a> · figure from <a href="https://github.com/ZikangZhou/QCNet">ZikangZhou/QCNet</a></div>
 
 ---
 
-## DONUT: decoder-only trajectory prediction
+## QCNet: encode the scene once, then the futures
 
-- Autoregressively unroll history and future with one decoder-only model
-- “Overprediction” adds auxiliary longer-horizon targets
-- At publication (ICCV 2025): new non-ensemble SOTA on Argoverse 2 single-agent forecasting; newer leaderboard entries have appeared since
-- Treat SOTA as benchmark- and date-specific—not a universal property
+- An agent-centric model puts the origin on the car at the current instant. One frame later that origin has moved, so the history and the map are encoded again
+- QCNet anchors each past state and each lane in its own frame. The embedding of a turn does not change if the map is rotated, and it stays valid as the car moves
+- Attention adds only the relative pose between two elements. Every agent, including the neighbors, reads this same cache
+- Six queries propose futures step by step, so a distant exit can look at a different part of the map than the next meter
+- A second pass corrects those proposals and gives each one a probability
 
-<div class="source"><a href="https://openaccess.thecvf.com/content/ICCV2025/html/Knoche_DONUT_A_Decoder-Only_Model_for_Trajectory_Prediction_ICCV_2025_paper.html">DONUT — Knoche et al., ICCV 2025</a></div>
+<div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2023/html/Zhou_Query-Centric_Trajectory_Prediction_CVPR_2023_paper.html">QCNet — Zhou et al., CVPR 2023</a></div>
+
+---
+
+## QCNet in the scene
+
+<img class="diagram wide" src="./img/qcnet-scenes.gif" alt="QCNet on four Argoverse 2 intersections, one at a time, each with a fan of predicted futures">
+
+<div class="source">Figure: <a href="https://github.com/ZikangZhou/QCNet">Zhou et al., CVPR 2023</a></div>
+
+---
+
+## Example of real-time forecasting
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/goirl-forecast.mp4"></video>
+
+<div class="source"><a href="https://arxiv.org/abs/2506.21121">GoIRL — Pei et al., ICML 2025</a> · clip from the <a href="https://youtu.be/MPECgueGRaQ?t=178">supplementary video</a></div>
 
 ---
 
@@ -901,13 +1061,13 @@ Intended answer: no. For the planner, "which lane does this light control" is pa
 - Joint prediction scales combinatorially with agents and modes
 - The predictor can change behavior when coupled to a planner
 
-<div class="callout quiz fragment"><span class="tag">Question</span><p class="mini">If six trajectories are predicted and one matches perfectly—but receives 1% probability—is that a good forecast?</p></div>
+<div class="callout quiz fragment"><span class="tag">Question</span><p class="mini">If six trajectories are predicted and one matches perfectly—but receives 30% probability—is that a good forecast?</p></div>
 
 Note:
-Intended answer: it depends on the metric, and that is the point. minADE/minFDE only look at the best of the six, so they call it perfect. Probability-aware metrics (Brier-minFDE, NLL) punish it, and so would a planner, which will treat a 1% future as nearly impossible. Sets up the metrics section.
+Intended answer: it depends on the metric, and that is the point. minADE/minFDE only look at the best of the six, so they call it perfect. Probability-aware metrics (Brier-minFDE, NLL) punish it, and so would a planner, which will treat a low-probability future as nearly impossible. The metrics slides are hidden, so make this point here.
 
 ---
-
+<!-- .slide: class="no-fragments" -->
 ## Try it yourself: motion forecasting
 
 - **Datasets:** [Argoverse 2 Motion Forecasting](https://www.argoverse.org/av2.html), [Waymo Motion](https://waymo.com/open/data/motion/)
@@ -919,12 +1079,12 @@ Intended answer: it depends on the metric, and that is the point. minADE/minFDE 
 ---
 <!-- .slide: class="section-slide" -->
 
-# Multimodal and multitask perception
+# Multitask learning
 
 One shared world, many sensors, many outputs
 
 ---
-
+<!-- .slide: class="hidden-slide" -->
 ## Where should sensor fusion happen?
 
 <div class="fusion-levels">
@@ -939,7 +1099,7 @@ One shared world, many sensors, many outputs
 - Missing sensors and calibration errors must be part of training and testing
 
 ---
-
+<!-- .slide: class="hidden-slide" -->
 ## BEVFusion: meet in a common space
 
 - Camera and LiDAR features are independently encoded
@@ -958,15 +1118,15 @@ One shared world, many sensors, many outputs
 <div class="two-c-container">
   <div class="two-c-col">
     <h4>Why share?</h4>
-    <ul><li>compute efficiency</li><li>shared geometry</li><li>richer supervision</li></ul>
+    <ul><li>compute efficiency</li><li>shared geometry</li><li>richer supervision</li><li>Trained jointly, planning can use the latent space freely, in a way that serves the decision</li></ul>
   </div>
   <div class="two-c-col">
     <h4>Why not?</h4>
-    <ul><li>negative transfer</li><li>loss balancing</li><li>coupled failures</li></ul>
+    <ul><li>negative transfer</li><li>loss balancing</li><li>coupled failures</li><li>Each task may pull that space in a different direction, leaving an embedding too weak for every task</li></ul>
   </div>
 </div>
 
-<div class="thought">A shared backbone can learn common sense—or become the single point where every task fails together.</div>
+<div class="thought fragment">A shared backbone can learn common sense—or become the single point where every task fails together.</div>
 
 ---
 
@@ -977,7 +1137,17 @@ One shared world, many sensors, many outputs
 - Influential research design, not proof that modular systems are obsolete
 - Integration improves information flow but complicates diagnosis and safety evidence
 
-<div class="source"><a href="https://arxiv.org/abs/2212.10156">UniAD — Hu et al., CVPR 2023 Best Paper</a></div>
+<div class="source fragment"><a href="https://arxiv.org/abs/2212.10156">UniAD — Hu et al., CVPR 2023 Best Paper</a></div>
+
+---
+
+## UniAD pipeline
+
+<img class="diagram wide" src="./img/uniad-arch.png" alt="UniAD pipeline: six cameras become a BEV, track and map queries read it, motion and occupancy queries consume those outputs, and the planner reads the ego query and the BEV">
+
+<p class="mini muted">Queries pass forward. Tracks and the map feed motion, motion feeds occupancy, and the planner reads the ego query together with the BEV.</p>
+
+<div class="source">Figure: <a href="https://arxiv.org/abs/2212.10156">Hu et al., CVPR 2023</a></div>
 
 ---
 
@@ -999,10 +1169,20 @@ One shared world, many sensors, many outputs
 - The planning head can run independently after training; other heads may run less frequently
 - Reported nearly **3× faster** runtime while retaining interpretable task outputs
 
-<div class="source"><a href="https://openaccess.thecvf.com/content/CVPR2024/html/Weng_PARA-Drive_Parallelized_Architecture_for_Real-time_Autonomous_Driving_CVPR_2024_paper.html">PARA-Drive — Weng et al., CVPR 2024</a></div>
+<div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2024/html/Weng_PARA-Drive_Parallelized_Architecture_for_Real-time_Autonomous_Driving_CVPR_2024_paper.html">PARA-Drive — Weng et al., CVPR 2024</a></div>
 
 ---
-<!-- .slide: class="section-slide" -->
+
+## PARA-Drive architecture
+
+<img class="diagram figure-tall" src="./img/paradrive-arch.png" alt="PARA-Drive architecture: mapping, motion prediction, occupancy, and planning each have their own queries and read the same BEV features in parallel">
+
+<p class="mini muted">Mapping, motion, occupancy, and planning each keep their own queries and read the same BEV. No head waits on another head's output.</p>
+
+<div class="source">Figure: <a href="https://openaccess.thecvf.com/content/CVPR2024/html/Weng_PARA-Drive_Parallelized_Architecture_for_Real-time_Autonomous_Driving_CVPR_2024_paper.html">Weng et al., CVPR 2024</a></div>
+
+---
+<!-- .slide: class="section-slide hidden-slide" -->
 
 # Measuring perception
 
@@ -1010,6 +1190,7 @@ A leaderboard is not a driver's license.
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Detection and tracking metrics
 
 - **AP / mAP:** precision–recall across classes and thresholds
@@ -1021,6 +1202,7 @@ A leaderboard is not a driver's license.
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Occupancy and mapping metrics
 
 - **IoU / mIoU:** overlap per semantic class
@@ -1033,6 +1215,7 @@ A leaderboard is not a driver's license.
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Forecasting metrics
 
 - **minADE<sub>K</sub>:** best average displacement error among K modes
@@ -1044,6 +1227,7 @@ A leaderboard is not a driver's license.
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## System KPIs
 
 - **Latency:** include pre-processing and post-processing
@@ -1056,7 +1240,7 @@ A leaderboard is not a driver's license.
 <p class="thought">The planner cannot brake for a high mIoU score.</p>
 
 ---
-<!-- .slide: class="section-slide" -->
+<!-- .slide: class="section-slide hidden-slide" -->
 
 # Risks and hard problems
 
@@ -1064,6 +1248,7 @@ Perception fails in distributions, not only in averages.
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## The long tail and the open world
 
 - Rare objects: fallen cargo, unusual vehicles, animals, debris
@@ -1078,6 +1263,7 @@ Intended answer: far more than 100 million. With zero failures, showing a rate b
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Uncertainty, confidence, and bias
 
 - Neural confidence is not automatically calibrated probability
@@ -1088,6 +1274,7 @@ Intended answer: far more than 100 million. With zero failures, showing a rate b
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Corruption, domain shift, and silent failure
 
 <div class="failure-row">
@@ -1103,6 +1290,7 @@ Intended answer: far more than 100 million. With zero failures, showing a rate b
 
 ---
 
+<!-- .slide: class="hidden-slide" -->
 ## Offline accuracy ≠ closed-loop safety
 
 - A detector metric weights errors differently from a planner
@@ -1120,7 +1308,7 @@ Keep this section compact and perception-focused. The goal is critical thinking,
 
 # Frontiers
 
-Simulation · world models · end-to-end · VLM/VLA
+Simulation · world models · end-to-end · VLM, VLA, decisions
 
 ---
 
@@ -1133,18 +1321,110 @@ Simulation · world models · end-to-end · VLM/VLA
 
 <div class="callout quiz fragment"><span class="tag">But</span><p class="mini">Photorealistic is not the same as physically correct, causally useful, or safety-representative.</p></div>
 
-<div class="source"><a href="https://arxiv.org/abs/2309.09777">DriveDreamer</a> · <a href="https://arxiv.org/abs/2309.17080">GAIA-1</a> · <a href="https://arxiv.org/abs/2308.01898">UniSim — CVPR 2023</a> · <a href="https://arxiv.org/abs/2401.01339">Street Gaussians — ECCV 2024</a></div>
+<div class="source fragment"><a href="https://arxiv.org/abs/2309.09777">DriveDreamer</a> · <a href="https://arxiv.org/abs/2309.17080">GAIA-1</a> · <a href="https://arxiv.org/abs/2308.01898">UniSim — CVPR 2023</a> · <a href="https://arxiv.org/abs/2401.01339">Street Gaussians — ECCV 2024</a></div>
+
+---
+
+## Generated conditions, one real clip
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/cosmos-weather.mp4"></video>
+
+<p class="mini muted">One public dashcam clip. Cosmos-Drive-Dreams keeps the layout and generates other weather, a depth image, and an HD map.</p>
+
+<div class="source"><a href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams/">Cosmos-Drive-Dreams — Ren et al., NVIDIA</a></div>
+
+---
+
+## Generated from a control video
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/cosmos-control.mp4"></video>
+
+<p class="mini muted">The left video is the only geometric input: lanes, one vehicle box, and a sign. Cosmos-Drive-Dreams paints the street, the car, and the stop sign from that control.</p>
+
+<div class="source"><a href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams/">Cosmos-Drive-Dreams — Ren et al., NVIDIA</a></div>
+
+---
+
+## A rare scene, generated
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/cosmos-cow.mp4"></video>
+
+<p class="mini muted">Prompt: a cow runs across a forest road. Six cameras of that scene are synthesized together. This is the kind of event a fleet almost never logs.</p>
+
+<div class="source"><a href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams/">Cosmos-Drive-Dreams — Ren et al., NVIDIA</a></div>
+
+---
+## The world, as 3D Gaussians
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/gaussian-world.mp4"></video>
+
+<p class="mini muted">WorldSplat’s second example, seen from above. A night intersection: the road, the buildings, and the vehicles, including a bus, are a cloud of 3D Gaussians.</p>
+
+<div class="source"><a href="https://arxiv.org/abs/2509.23402">WorldSplat — Zhu et al., 2025</a> · <a href="https://wm-research.github.io/worldsplat/">project page</a></div>
+
+---
+
+## A recorded drive, rebuilt with Gaussians
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/driving-gaussian.mp4"></video>
+
+<p class="mini muted">Same nuScenes scene, re-rendered. Left: one set of 3D Gaussians for the whole street, so moving cars smear. Right: DrivingGaussian keeps the static street and the moving objects apart.</p>
+
+<div class="source"><a href="https://arxiv.org/abs/2312.07920">DrivingGaussian — Zhou et al., CVPR 2024</a> · clip from the <a href="https://pkuvdig.github.io/DrivingGaussian/">project page</a></div>
 
 ---
 
 ## Learned world models
 
-- Learn how scenes evolve under actions
-- Predict future observations, latent states, or occupancy
-- Support imagination, planning, and data generation
-- Need action consistency, interaction realism, and uncertainty—not only good video
+<p class="fragment">Given the scene now, a world model predicts the scene a moment later.</p>
 
-<div class="thought">A video model can predict plausible pixels. A driving world model must predict the consequences of decisions.</div>
+- **What it predicts:** pixels, a latent embedding, an occupancy grid, or depth and semantics. Pixels must match the image. A latent keeps a compact summary of the scene
+- **Where the label comes from:** the next recorded observation. The sequence supervises itself
+- **Why that is powerful:** a web video, a raw camera, or a LiDAR log is already a training example. Almost every recorded sequence can be used
+
+---
+
+## Drive-JEPA: predict the future in latent space
+
+- A vision transformer is pretrained on front-camera video to predict the embedding of masked future frames. It does not reconstruct the pixels
+- The pretraining set is about 330 hours of driving, cut into 8-frame clips at 2 Hz. The target embedding comes from a slowly updated copy of the same encoder
+- A planner then reads those features and proposes many trajectories, anchored at waypoints, and refines them
+- Each proposal is trained on the logged human path and on extra paths a simulator marks as safe and comfortable. One recorded drive is only one legal choice
+- A scorer picks one proposal from collision risk, traffic rules, comfort, and agreement with the previous decision
+
+<div class="source fragment"><a href="https://arxiv.org/abs/2601.22032">Drive-JEPA — Wang et al., 2026</a></div>
+
+---
+
+## Drive-JEPA architecture
+
+<img class="diagram figure-tall" src="./img/drive-jepa-arch.png" alt="Drive-JEPA architecture: masked video pretraining with an EMA target encoder, multimodal trajectory distillation from simulator-scored vocabularies, waypoint-anchored proposal generation, and momentum-aware trajectory selection">
+
+<p class="mini muted">Top left: the encoder learns by predicting the embedding of masked frames. Top right: the simulator turns a trajectory vocabulary into extra safe targets. Bottom: features in, proposals refined, one trajectory selected.</p>
+
+<div class="source">Figure: <a href="https://arxiv.org/abs/2601.22032">Wang et al., 2026</a></div>
+
+---
+
+## DriveLaW: plan from the video latent
+
+- A video diffusion model is trained to continue a driving clip. Its latent packs the scene, the motion, and the layout into one state
+- The planner is a second diffusion model. It reads that same latent and writes a trajectory, with no separate bird’s-eye-view features
+- Video and planning are trained in stages, so the two losses do not pull the shared state apart
+- On nuScenes future-video prediction it leads the methods it compares: FID 4.6 and FVD 81.3
+- On NAVSIM it scores 89.1 PDMS from one camera, with no learned scorer after the planner
+
+<div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2026/html/Xia_DriveLaW_Unifying_Planning_and_Video_Generation_in_a_Latent_Driving_CVPR_2026_paper.html">DriveLaW — Xia et al., CVPR 2026</a></div>
+
+---
+
+## DriveLaW architecture
+
+<img class="diagram wide" src="./img/drivelaw-arch.png" alt="DriveLaW architecture: past frames and a text prompt enter video DiT blocks that predict future video, and action DiT blocks read the same video latents to decode the future trajectory">
+
+<p class="mini muted">Top row: the video model continues the clip. Bottom row: the action model reads the video blocks’ latents, together with the command and ego status, and decodes the trajectory.</p>
+
+<div class="source">Figure: <a href="https://openaccess.thecvf.com/content/CVPR2026/html/Xia_DriveLaW_Unifying_Planning_and_Video_Generation_in_a_Latent_Driving_CVPR_2026_paper.html">Xia et al., CVPR 2026</a></div>
 
 ---
 
@@ -1170,7 +1450,7 @@ Callback to the stack from the beginning: the overlapping circles were a hint. E
 
 <p class="thought fragment">If a model ignoring every camera matches your planner, the benchmark is grading the speedometer.</p>
 
-<div class="source">
+<div class="source fragment">
   <a href="https://arxiv.org/abs/2312.03031">Is Ego Status All You Need? — Li et al., CVPR 2024</a> ·
   <a href="https://arxiv.org/abs/2406.15349">NAVSIM — NeurIPS 2024</a> ·
   <a href="https://arxiv.org/abs/2406.03877">Bench2Drive — NeurIPS 2024</a>
@@ -1178,30 +1458,29 @@ Callback to the stack from the beginning: the overlapping circles were a hint. E
 
 ---
 
-## VLMs, VLAs, and open-vocabulary perception
+## VLMs, VLAs, decision models, and open vocabulary
 
 - **VLM:** connect visual features and language concepts
 - **VLA:** condition actions on vision and language/instructions
-- **Open-vocabulary perception:** detect or segment from text queries (“fallen mattress”, “horse cart”) instead of a fixed class list—a direct attack on the open-set obstacles from the risks section
+- **Decision model:** score each offered choice with a probability. JEV reads the images and the text and answers in one pass
+- **Open-vocabulary perception:** detect or segment from a text query, such as “fallen mattress” or “horse cart,” including obstacles that were never in the class list
 - Potential: semantic reasoning, explainable interfaces
 - Risks: hallucination, latency, weak grounding, unfaithful explanations
 
-<div class="source"><a href="https://arxiv.org/abs/2312.14150">DriveLM</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA</a></div>
+<div class="source fragment"><a href="https://arxiv.org/abs/2312.14150">DriveLM</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA</a> · <a href="https://huggingface.co/autotrust/JEV-27B-VL">JEV</a></div>
 
 ---
 
-## Open problems worth working on
+## Research directions
 
-- Open-world obstacles and calibrated uncertainty
-- Rare-event evaluation and sensor degradation
-- Efficient occupancy and map-change detection
-- Joint forecasting and causally useful simulation
-- Verifiable end-to-end driving
-
-<div class="callout takeaway"><span class="tag">Research compass</span><p class="mini">Improve not only average accuracy, but observability, uncertainty, efficiency, and evidence under failure.</p></div>
+- **Open world:** calibrated probabilities for novel objects and choices, with open-vocabulary models and JEV
+- **Rare events and bad sensors:** Cosmos-Drive-Dreams for scenes the fleet never logs, then dirty lenses, dropped sensors, and new cities
+- **Occupancy and maps:** faster occupancy with SparseOcc, and map changes with Neural Map Prior
+- **Futures you can act on:** QCNet, Drive-JEPA, and DriveLaW, judged on what the action causes
+- **End-to-end with evidence:** UniAD and PARA-Drive, scored on NAVSIM, and Bench2Drive where the world reacts
 
 ---
-
+<!-- .slide: class="hidden-slide" -->
 ## Project ladder
 
 - **Course project:** pretrained model + small dataset slice + one clear hypothesis
@@ -1212,30 +1491,72 @@ Callback to the stack from the beginning: the overlapping circles were a hint. E
 
 ---
 
-## Takeaways
+## Looking in the Rearview Mirror
 
-1. Perception is the vehicle’s **senses**, not merely object detection.
-2. Sensors offer complementary information—and complementary failures.
-3. Representations shape what downstream tasks can know.
-4. Detection, occupancy, mapping, and forecasting answer different questions.
-5. Metrics need scenario slices, uncertainty, and deployment KPIs.
-6. Frontiers are exciting; reliability remains the admission ticket.
+1. **Obstacles.** Detect, localize, and classify, then keep the same identity over time.
+2. **Occupancy.** A grid of free, occupied, and unknown space, including shapes that have no box.
+3. **Mapping and topology.** Lanes, boundaries, and the links between them, from a stored map or from the cameras.
+4. **Forecasting.** Several futures and their probabilities, built on the tracks and the map.
+5. **End-to-end.** UniAD and PARA-Drive train those tasks with planning, up to sensors in and a trajectory out. Open-loop, NAVSIM, and closed-loop test different things.
+6. **Left out today.** Task metrics, the long tail, uncertainty and bias, sensor corruption, and the distance between an offline score and a safe drive.
+
+---
+
+## Looking through the Windshield
+
+<p class="fragment">Autonomous driving is unsolved. This lecture was the map of the field, and a large part of that map is still open research.</p>
+
+<ul>
+  <li class="fragment"><strong>Still unanswered:</strong> the rare object, the failed sensor, a confidence you can trust, and a test in which the world reacts</li>
+  <li class="fragment"><strong>Where the field is working:</strong> forecasting, world models, simulation, and end-to-end driving. Each one leaves the next question open</li>
+  <li class="fragment"><strong>Where you come in:</strong> one hypothesis, one experiment, one result you can stand behind</li>
+</ul>
+
+---
+<!-- .slide: data-state="folks-card" class="folks-slide" data-background-image="./img/folks-rings.svg" data-background-size="cover" data-background-color="#c8102e" data-transition="fade" data-transition-speed="slow" data-background-transition="fade" -->
+
+# That's all Folks!
 
 ---
 <!-- .slide: class="title-slide end-slide" -->
 
 # Questions?
-
-### Discussion prompts
+<br>
+<h3 class="fragment">Discussion prompts</h3>
 
 - Which perception output would you trust least today?
 - Boxes, occupancy, or vectors: what should the primary scene representation be?
 - What evidence would convince you that a world model improves safety?
 
+---
+<!-- .slide: class="title-slide end-slide closing-slide" -->
+
+# Deep Learning Perception
+## for Autonomous Driving
+
+**Gabriele Graffieti**
+
+<span class="subtitle">Autonomous Driving and ADAS Technologies Seminar</span>
+
 <div class="title-meta">
-  <span>Gabriele Graffieti</span>
-  <span>Deep Learning Perception for Autonomous Driving</span>
+  <span>University of Parma</span>
+  <span>Nov. 9, 2026</span>
 </div>
+
+<p class="print-hint">Pick one. Both open the browser dialog.</p>
+
+<div class="print-choices">
+  <a class="print-deck" data-print="mono" href="?theme=print&amp;print-pdf=1&amp;autoprint=1">
+    <strong>Print in black and white</strong>
+    <span>Monochrome, for a paper copy.</span>
+  </a>
+  <a class="print-deck" data-print="color" href="?theme=dark&amp;print-pdf=1&amp;autoprint=1">
+    <strong>Save a color PDF</strong>
+    <span>Keeps the colors you see now. Choose Save as PDF.</span>
+  </a>
+</div>
+
+
         </textarea>
       </section>
     </div>

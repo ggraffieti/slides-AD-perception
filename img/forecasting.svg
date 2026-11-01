@@ -1,22 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600" role="img" aria-labelledby="title desc">
-  <title id="title">Multimodal motion forecasting</title>
-  <desc id="desc">An agent history branches into straight, left-turn and right-turn future trajectories with probabilities.</desc>
-  <rect width="1100" height="600" rx="28" fill="#0f1521"/>
-  <g stroke="#2e3c55" stroke-width="65" fill="none">
-    <path d="M550 600V0"/><path d="M0 300H1100"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 640" role="img" aria-labelledby="title desc">
+  <title id="title">Forecasting another vehicle at a four-exit roundabout</title>
+  <desc id="desc">The ego vehicle is stopped at the south entrance of a four-exit roundabout. Another vehicle on the left has three futures: leave on the ego's road, probability 0.40, stay in the circle, probability 0.35, or take the left exit, probability 0.25.</desc>
+  <rect width="1100" height="640" rx="28" fill="#0f1521"/>
+  <g stroke="#2a384e" stroke-width="86" stroke-linecap="round" fill="none">
+    <path d="M540 16 V188"/>
+    <path d="M672 320 H1084"/>
+    <path d="M540 624 V452"/>
+    <path d="M16 320 H408"/>
+    <circle cx="540" cy="320" r="132"/>
   </g>
-  <g stroke="#c9d2df" stroke-width="4" stroke-dasharray="20 18" fill="none" opacity=".6">
-    <path d="M550 600V0"/><path d="M0 300H1100"/>
+  <circle cx="540" cy="320" r="84" fill="#17362e"/>
+  <circle cx="540" cy="320" r="84" fill="none" stroke="#245246" stroke-width="8"/>
+  <g stroke="#d5deea" stroke-width="4" stroke-dasharray="14 14" stroke-linecap="round" fill="none" opacity="0.65">
+    <path d="M540 36 V178"/>
+    <path d="M690 320 H1064"/>
+    <path d="M540 604 V478"/>
+    <path d="M36 320 H390"/>
+    <circle cx="540" cy="320" r="132"/>
   </g>
-  <rect x="510" y="450" width="80" height="130" rx="28" fill="#dfe7f2" stroke="#fff" stroke-width="5"/>
-  <circle cx="550" cy="450" r="13" fill="#44aff6"/>
-  <path d="M550 450C550 360 550 250 550 85" fill="none" stroke="#22c55e" stroke-width="13" stroke-linecap="round"/>
-  <path d="M550 450C550 335 455 300 175 300" fill="none" stroke="#44aff6" stroke-width="13" stroke-linecap="round"/>
-  <path d="M550 450C550 335 645 300 925 300" fill="none" stroke="#f59e0b" stroke-width="13" stroke-linecap="round"/>
-  <g fill="#f7f9fc" font-family="system-ui,sans-serif" font-size="25" font-weight="700">
-    <text x="605" y="115">straight 0.55</text>
-    <text x="125" y="270">left 0.30</text>
-    <text x="820" y="270">right 0.15</text>
+  <path d="M540 470 H586" stroke="#f7f9fc" stroke-width="7" stroke-linecap="round"/>
+  <path d="M416 275 A132 132 0 0 0 606 434" fill="none" stroke="#22c55e" stroke-width="22" stroke-linecap="round" stroke-opacity="0.24"/>
+  <path d="M416 275 C360 278 300 320 220 320 H78" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round" stroke-opacity="0.12"/>
+  <path d="M455 421 C478 470 508 505 512 545 V592" fill="none" stroke="#a855f7" stroke-width="28" stroke-linecap="round" stroke-opacity="0.32"/>
+  <path d="M416 275 A132 132 0 0 0 606 434" fill="none" stroke="#22c55e" stroke-width="11" stroke-linecap="round" stroke-opacity="0.82"/>
+  <path d="M416 275 C360 278 300 320 220 320 H78" fill="none" stroke="#f59e0b" stroke-width="7" stroke-linecap="round" stroke-opacity="0.48"/>
+  <path d="M455 421 C478 470 508 505 512 545 V592" fill="none" stroke="#a855f7" stroke-width="13" stroke-linecap="round"/>
+  <path d="M620 426 L610 438 L606 426 Z" fill="#22c55e" fill-opacity="0.85"/>
+  <path d="M50 320 L72 313 L72 327 Z" fill="#f59e0b" fill-opacity="0.5"/>
+  <path d="M512 618 L500 590 L524 590 Z" fill="#a855f7"/>
+  <g fill="#44aff6">
+    <circle cx="484" cy="200" r="5" opacity="0.35"/>
+    <circle cx="455" cy="219" r="6" opacity="0.55"/>
+    <circle cx="432" cy="244" r="7" opacity="0.8"/>
   </g>
-  <g fill="#44aff6" opacity=".45"><circle cx="550" cy="490" r="11"/><circle cx="550" cy="525" r="9"/><circle cx="550" cy="558" r="7"/></g>
+  <g transform="translate(558 548)">
+    <rect x="-20" y="-36" width="40" height="72" rx="13" fill="#9aa8bc" stroke="#e8eef6" stroke-width="4"/>
+    <path d="M-11 -24 H11 L0 -38 Z" fill="#44aff6"/>
+  </g>
+  <g transform="translate(416 275) rotate(200)">
+    <rect x="-20" y="-36" width="40" height="70" rx="13" fill="#f4f7fb" stroke="#44aff6" stroke-width="5"/>
+    <path d="M-11 -24 H11 L0 -38 Z" fill="#44aff6"/>
+  </g>
+  <g font-family="system-ui,sans-serif" font-weight="700">
+    <text x="600" y="540" fill="#aebad0" font-size="20">ego &#183; stopped</text>
+    <text x="660" y="468" fill="#22c55e" fill-opacity="0.9" font-size="22">stays in</text>
+    <text x="668" y="502" fill="#22c55e" fill-opacity="0.9" font-size="32">0.35</text>
+    <text x="28" y="228" fill="#f59e0b" fill-opacity="0.65" font-size="22">exits</text>
+    <text x="36" y="262" fill="#f59e0b" fill-opacity="0.65" font-size="32">0.25</text>
+    <text x="360" y="560" fill="#a855f7" font-size="22">exits</text>
+    <text x="368" y="594" fill="#a855f7" font-size="32">0.40</text>
+  </g>
 </svg>

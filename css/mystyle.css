@@ -260,6 +260,57 @@ body.particles-active .title-particles {
   font-weight: 500;
 }
 
+.break-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  margin: 0.15em 0 0.55em;
+}
+
+.reveal .break-timer-display {
+  margin: 0;
+  padding: 0 0.08em;
+  border: 0;
+  background: transparent;
+  color: var(--r-link-color);
+  font-family: inherit;
+  font-size: 2.6em;
+  font-weight: 760;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.break-timer.is-done .break-timer-display {
+  color: var(--amber);
+}
+
+.reveal .break-timer-step {
+  width: 1.55em;
+  height: 1.55em;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.reveal .break-timer-step:hover,
+.reveal .break-timer-display:hover {
+  color: var(--r-link-color-hover);
+}
+
+.reveal .break-timer-step:hover {
+  border-color: var(--r-link-color);
+}
+
 .section-slide .diagram {
   margin-top: 0.35em;
 }
@@ -270,6 +321,14 @@ body.particles-active .title-particles {
   justify-content: center;
   gap: 0.8em;
   width: 100%;
+}
+
+.two-c-container:has(> .two-c-col > h4:first-child) {
+  align-items: flex-start;
+}
+
+.two-c-col > h4:first-child {
+  margin-top: 0;
 }
 
 .two-c-col,
@@ -302,6 +361,14 @@ body.particles-active .title-particles {
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
 }
 
+/* Reveal's `.reveal img` sets left and right margin to 0 and wins over `.diagram`. */
+.reveal img.diagram,
+.reveal video.diagram,
+.reveal iframe.diagram {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .diagram.wide {
   width: 93%;
   max-height: 390px;
@@ -332,6 +399,14 @@ video.diagram {
   width: auto;
   max-width: 96%;
   max-height: 420px;
+  background: #000;
+}
+
+iframe.diagram {
+  width: min(96%, 680px);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
   background: #000;
 }
 
@@ -628,6 +703,16 @@ video.diagram {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.output-grid img {
+  display: block;
+  width: 100%;
+  height: 230px;
+  margin-top: 0.3em;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+}
+
 .output-grid > div:nth-child(1) {
   border-top: 4px solid var(--blue);
 }
@@ -775,6 +860,10 @@ video.diagram {
   text-align: center !important;
 }
 
+.text-align-center {
+  text-align: center !important;
+}
+
 .reveal .slides section.text-align-center .diagram {
   margin-right: auto;
   margin-left: auto;
@@ -866,6 +955,10 @@ html[data-deck-theme="light"] .diagram {
   box-shadow: 0 16px 42px rgba(15, 23, 42, 0.12);
 }
 
+html[data-deck-theme="light"] iframe.diagram {
+  background: #000;
+}
+
 html[data-deck-theme="light"] .diagram.transparent {
   border-color: transparent;
   background: transparent;
@@ -915,6 +1008,12 @@ html[data-deck-theme="light"] .paper-card span {
 
 html[data-deck-theme="light"] .reveal .sensor-table td:last-child {
   color: #8a4f00;
+}
+
+html[data-deck-theme="light"] .failure-row span {
+  border-color: rgba(180, 83, 9, 0.7);
+  background: rgba(217, 119, 6, 0.16);
+  color: #7a3e00;
 }
 
 /* Printer theme: typography and UI become monochrome; image pixels are untouched. */
@@ -1013,6 +1112,10 @@ html[data-deck-theme="print"] .diagram {
   box-shadow: none;
 }
 
+html[data-deck-theme="print"] .break-timer-step {
+  display: none;
+}
+
 html[data-deck-theme="print"] .light-invert {
   filter: invert(1) hue-rotate(180deg);
 }
@@ -1063,4 +1166,124 @@ html.print-pdf .title-particles {
 
 html.print-pdf body.reveal-viewport::after {
   display: none !important;
+}
+
+@font-face {
+  font-family: "Pacifico";
+  src: url("../fonts/Pacifico-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+.reveal .slides section.folks-slide {
+  text-align: center;
+}
+
+.reveal .folks-slide h1 {
+  margin: 0;
+  font-family: "Pacifico", cursive;
+  font-size: 4em;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: #e10600 !important;
+  -webkit-text-fill-color: #e10600;
+  -webkit-text-stroke: 0.04em #1a120c;
+  paint-order: stroke fill;
+  text-shadow: 0.035em 0.05em 0 #1a120c;
+  background: none;
+}
+
+.reveal .folks-stutter h1 {
+  font-size: 1.9em;
+}
+
+.closing-slide .title-meta {
+  margin-top: 1em;
+}
+
+.closing-slide .print-hint {
+  margin: 1.15em auto 0.35em;
+  max-width: 18em;
+  color: var(--muted);
+  font-size: 0.58em;
+  line-height: 1.35;
+}
+
+.print-choices {
+  display: flex;
+  justify-content: center;
+  gap: 0.7em;
+  margin-top: 0.7em;
+}
+
+.print-choices a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28em;
+  width: 12em;
+  padding: 0.55em 0.7em 0.65em;
+  border: 2px solid var(--line);
+  border-radius: 0.45em;
+  background: var(--panel);
+  text-align: left;
+  text-decoration: none;
+}
+
+.print-choices a strong {
+  font-size: 0.62em;
+  line-height: 1.2;
+}
+
+.print-choices a span {
+  color: var(--muted);
+  font-size: 0.46em;
+  line-height: 1.3;
+}
+
+.print-choices a[data-print="color"] {
+  border-color: var(--r-link-color);
+}
+
+.reveal .print-choices a:hover,
+.reveal .print-choices a:focus {
+  border-width: 2px;
+  border-style: solid;
+  text-decoration: none;
+  text-shadow: none;
+  transform: none;
+}
+
+.reveal .print-choices a[data-print="mono"]:hover,
+.reveal .print-choices a[data-print="mono"]:focus {
+  border-color: var(--line);
+}
+
+.reveal .print-choices a[data-print="color"]:hover,
+.reveal .print-choices a[data-print="color"]:focus {
+  border-color: var(--r-link-color);
+}
+
+.reveal .slides section.folks-slide {
+  transition: opacity 2.4s ease-in-out, visibility 2.4s linear !important;
+}
+
+.reveal > .backgrounds > .slide-background.folks-slide,
+.reveal > .backgrounds > .slide-background:has(+ .slide-background.folks-slide.present) {
+  transition-duration: 2.4s !important;
+  transition-timing-function: ease-in-out !important;
+}
+
+html[data-deck-theme="light"] .reveal .folks-slide h1,
+html[data-deck-theme="print"] .reveal .folks-slide h1,
+html.print-pdf .reveal .folks-slide h1 {
+  color: #e10600 !important;
+  -webkit-text-fill-color: #e10600;
+  background: none;
+  text-shadow: 0.04em 0.06em 0 #1a120c;
+}
+
+html.folks-card .reveal .slide-number {
+  opacity: 0;
 }

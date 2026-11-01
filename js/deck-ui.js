@@ -188,6 +188,33 @@
 		});
 		resizeParticles();
 
+		// Markdown slides can opt out with class="hidden-slide". Reveal only
+		// removes sections that already carry data-visibility="hidden" when
+		// it starts, so this must run after RevealMarkdown and before that.
+		// The end cards stay in the live deck and drop out of the PDF.
+		const HideSlides = {
+			id: 'hide-slides',
+			init: () => {
+				const printing = new URLSearchParams(window.location.search).has(
+					'print-pdf',
+				);
+				document
+					.querySelectorAll('.reveal .slides section.hidden-slide')
+					.forEach((slide) => {
+						slide.dataset.visibility = 'hidden';
+					});
+				if (printing) {
+					document
+						.querySelectorAll(
+							'.reveal .slides section.folks-slide, .reveal .slides section.break-slide, .reveal .slides section.closing-slide',
+						)
+						.forEach((slide) => {
+							slide.dataset.visibility = 'hidden';
+						});
+				}
+			},
+		};
+
 		// Must run after RevealMarkdown and before Reveal sorts fragments,
 		// so bullets and fragment callouts share DOM order.
 		const AutoFragments = {
@@ -211,13 +238,32 @@
 			transition: 'slide',
 			backgroundTransition: 'fade',
 			pdfSeparateFragments: false,
-			plugins: [RevealMarkdown, AutoFragments, RevealHighlight, RevealNotes],
+			plugins: [RevealMarkdown, HideSlides, AutoFragments, RevealHighlight, RevealNotes],
 		}).then(() => {
 			refreshThemeImages(document.documentElement.dataset.deckTheme);
 			Reveal.on('slidechanged', refreshTitleParticles);
 			refreshTitleParticles();
+			setupBreakTimers();
 
 			const params = new URLSearchParams(window.location.search);
+			document.querySelectorAll('a.print-deck').forEach((link) => {
+				link.addEventListener('click', (event) => {
+					event.preventDefault();
+					const currentTheme = document.documentElement.dataset.deckTheme;
+					const returnTheme = ['dark', 'light'].includes(currentTheme)
+						? currentTheme
+						: 'dark';
+					sessionStorage.setItem(RETURN_THEME_STORAGE_KEY, returnTheme);
+					const printUrl = new URL(window.location.href);
+					const color = link.dataset.print === 'color';
+					printUrl.searchParams.set('theme', color ? returnTheme : 'print');
+					printUrl.searchParams.set('print-pdf', '1');
+					printUrl.searchParams.set('autoprint', '1');
+					printUrl.hash = '';
+					window.location.assign(printUrl);
+				});
+			});
+
 			if (params.has('print-pdf') && params.get('autoprint') === '1') {
 				const openPrintDialog = () =>
 					window.setTimeout(() => window.print(), 400);
@@ -316,6 +362,83 @@
 				localStorage.setItem(THEME_STORAGE_KEY, returnTheme);
 				window.location.replace(returnUrl);
 			}
+		});
+	};
+
+	const setupBreakTimers = () => {
+		const format = (totalSeconds) => {
+			const minutes = Math.floor(totalSeconds / 60);
+			const seconds = totalSeconds % 60;
+			return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+		};
+
+		document.querySelectorAll('.break-timer').forEach((timer) => {
+			const minutes = Number(timer.dataset.minutes) || 10;
+			const initial = Math.max(60, Math.round(minutes * 60));
+			const display = timer.querySelector('.break-timer-display');
+			if (!display) return;
+
+			let armed = initial;
+			let remaining = initial;
+			let deadline = 0;
+			let handle = 0;
+			let running = false;
+
+			const render = () => {
+				display.textContent = format(remaining);
+				timer.classList.toggle('is-running', running);
+				timer.classList.toggle('is-done', remaining === 0);
+			};
+
+			const stop = () => {
+				running = false;
+				window.clearInterval(handle);
+				handle = 0;
+			};
+
+			const tick = () => {
+				remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+				if (remaining === 0) stop();
+				render();
+			};
+
+			const shown = () =>
+				running
+					? Math.max(0, Math.ceil((deadline - Date.now()) / 1000))
+					: remaining;
+
+			display.addEventListener('click', (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				if (running) {
+					remaining = shown();
+					stop();
+				} else {
+					if (remaining === 0) remaining = armed;
+					deadline = Date.now() + remaining * 1000;
+					running = true;
+					handle = window.setInterval(tick, 250);
+				}
+				render();
+				display.blur();
+			});
+
+			timer.querySelectorAll('.break-timer-step').forEach((step) => {
+				step.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					remaining = Math.max(0, shown() + Number(step.dataset.step));
+					if (remaining > 0) armed = remaining;
+					if (running) {
+						if (remaining === 0) stop();
+						else deadline = Date.now() + remaining * 1000;
+					}
+					render();
+					step.blur();
+				});
+			});
+
+			render();
 		});
 	};
 
