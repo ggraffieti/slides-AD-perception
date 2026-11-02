@@ -99,6 +99,34 @@
 					display: none;
 				}
 
+				.speaker-controls-progress {
+					position: fixed;
+					top: 12px;
+					left: 12px;
+					z-index: 40;
+					margin: 0;
+					padding: 8px 14px 10px;
+					background: rgba( 16, 22, 34, 0.92 );
+					color: #fff;
+					border-radius: 8px;
+				}
+
+				.speaker-controls-progress .label {
+					margin: 0;
+					color: #aeb8ca;
+					text-transform: uppercase;
+					font-weight: normal;
+					font-size: 0.66em;
+				}
+
+				.speaker-controls-progress .slide-count {
+					font-size: 32px;
+					font-weight: bold;
+					line-height: 1;
+					letter-spacing: 0.02em;
+					color: #fff;
+				}
+
 				.speaker-controls-time .label,
 				.speaker-controls-pace .label,
 				.speaker-controls-notes .label {
@@ -311,6 +339,11 @@
 		<div id="current-slide"></div>
 		<div id="upcoming-slide"><span class="overlay-element label">Upcoming</span></div>
 		<div id="speaker-controls">
+			<div class="speaker-controls-progress">
+				<h4 class="label">Slide</h4>
+				<div class="slide-count">–/–</div>
+			</div>
+
 			<div class="speaker-controls-time">
 				<h4 class="label">Time <span class="reset-button">Click to Reset</span></h4>
 				<div class="clock">
@@ -511,6 +544,24 @@
 					currentSlide.contentWindow.postMessage( JSON.stringify({ method: 'setState', args: [ data.state ] }), '*' );
 					upcomingSlide.contentWindow.postMessage( JSON.stringify({ method: 'setState', args: [ upcomingState ] }), '*' );
 					upcomingSlide.contentWindow.postMessage( JSON.stringify({ method: 'next' }), '*' );
+
+					updateSlideCount();
+
+				}
+
+				/**
+				 * Shows the flattened slide index, such as 34/80.
+				 */
+				function updateSlideCount() {
+
+					var el = document.querySelector( '.slide-count' );
+					if( !el ) return;
+
+					callRevealApi( 'getSlidePastCount', [], function( past ) {
+						callRevealApi( 'getTotalSlides', [], function( total ) {
+							el.textContent = ( past + 1 ) + '/' + total;
+						} );
+					} );
 
 				}
 

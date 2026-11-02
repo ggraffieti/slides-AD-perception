@@ -1106,6 +1106,14 @@ html[data-deck-theme="print"] .paper-card {
   box-shadow: none !important;
 }
 
+html[data-deck-theme="print"] .equation,
+html[data-deck-theme="print"] .thought,
+html[data-deck-theme="print"] .warning,
+html[data-deck-theme="print"] .nav-hint,
+html[data-deck-theme="print"] .math-inline {
+  color: #000 !important;
+}
+
 html[data-deck-theme="print"] .diagram {
   border-color: #000;
   background: transparent;

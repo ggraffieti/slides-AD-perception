@@ -24,22 +24,33 @@ const Plugin = () => {
 	 */
 	function openSpeakerWindow() {
 
-		// If a window is already open, focus it
+		// A window left open from before this change has no counter.
+		// Close it and write a fresh speaker view.
 		if( speakerWindow && !speakerWindow.closed ) {
-			speakerWindow.focus();
-		}
-		else {
-			speakerWindow = window.open( 'about:blank', 'reveal.js - Notes', 'width=1100,height=700' );
-			speakerWindow.marked = marked;
-			speakerWindow.document.write( speakerViewHTML );
+			var hasSlideCount = false;
+			try {
+				hasSlideCount = !!speakerWindow.document.querySelector( '.slide-count' );
+			}
+			catch( error ) {}
 
-			if( !speakerWindow ) {
-				alert( 'Speaker view popup failed to open. Please make sure popups are allowed and reopen the speaker view.' );
+			if( hasSlideCount ) {
+				speakerWindow.focus();
 				return;
 			}
 
-			connect();
+			speakerWindow.close();
 		}
+
+		speakerWindow = window.open( 'about:blank', 'reveal.js - Notes', 'width=1100,height=700' );
+		speakerWindow.marked = marked;
+		speakerWindow.document.write( speakerViewHTML );
+
+		if( !speakerWindow ) {
+			alert( 'Speaker view popup failed to open. Please make sure popups are allowed and reopen the speaker view.' );
+			return;
+		}
+
+		connect();
 
 	}
 
@@ -50,12 +61,21 @@ const Plugin = () => {
 
 		if( speakerWindow && !speakerWindow.closed ) {
 			speakerWindow.focus();
+			return;
 		}
-		else {
-			speakerWindow = reconnectWindow;
-			window.addEventListener( 'message', onPostMessage );
-			onConnected();
+
+		speakerWindow = reconnectWindow;
+		try {
+			if( !speakerWindow.document.querySelector( '.slide-count' ) ) {
+				speakerWindow.close();
+				openSpeakerWindow();
+				return;
+			}
 		}
+		catch( error ) {}
+
+		window.addEventListener( 'message', onPostMessage );
+		onConnected();
 
 	}
 

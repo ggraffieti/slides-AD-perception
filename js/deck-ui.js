@@ -188,6 +188,31 @@
 		});
 		resizeParticles();
 
+		// The title block is written only in sections/00-title-slide.md.
+		// After Markdown renders it, copy that slide onto the closing slide
+		// and into the browser tab.
+		const TalkIdentity = {
+			id: 'talk-identity',
+			init: () => {
+				const opening = document.querySelector(
+					'.reveal .slides section.opening-slide',
+				);
+				const mount = document.querySelector(
+					'.reveal .slides section.closing-slide .talk-identity',
+				);
+				if (opening && mount) {
+					mount.replaceChildren(
+						...Array.from(opening.childNodes, (node) => node.cloneNode(true)),
+					);
+				}
+				const title = opening?.querySelector('h1')?.textContent?.trim() ?? '';
+				const subtitle = opening?.querySelector('h2')?.textContent?.trim() ?? '';
+				if (title) {
+					document.title = subtitle ? `${title} ${subtitle}` : title;
+				}
+			},
+		};
+
 		// Markdown slides can opt out with class="hidden-slide". Reveal only
 		// removes sections that already carry data-visibility="hidden" when
 		// it starts, so this must run after RevealMarkdown and before that.
@@ -206,7 +231,7 @@
 				if (printing) {
 					document
 						.querySelectorAll(
-							'.reveal .slides section.folks-slide, .reveal .slides section.break-slide, .reveal .slides section.closing-slide',
+							'.reveal .slides section.folks-slide, .reveal .slides section.break-slide, .reveal .slides section.questions-slide, .reveal .slides section.closing-slide',
 						)
 						.forEach((slide) => {
 							slide.dataset.visibility = 'hidden';
@@ -238,7 +263,14 @@
 			transition: 'slide',
 			backgroundTransition: 'fade',
 			pdfSeparateFragments: false,
-			plugins: [RevealMarkdown, HideSlides, AutoFragments, RevealHighlight, RevealNotes],
+			markdown: {
+				separator: '^---$',
+				verticalSeparator: '^--$',
+				notesSeparator: '^Note:',
+			},
+			zoomKey: 'alt',
+			zoomLevel: 2,
+			plugins: [RevealMarkdown, TalkIdentity, HideSlides, AutoFragments, RevealHighlight, RevealNotes, RevealZoom],
 		}).then(() => {
 			refreshThemeImages(document.documentElement.dataset.deckTheme);
 			Reveal.on('slidechanged', refreshTitleParticles);
