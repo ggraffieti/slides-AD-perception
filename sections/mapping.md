@@ -23,6 +23,7 @@
 - **Online local map:** lanes and boundaries perceived now, in the ego frame, from the sensors alone
 
 ---
+<!-- .slide: class="hidden-slide" -->
 
 ## Offline HD maps
 
@@ -34,6 +35,7 @@
 <div class="thought fragment">A map is a prior, not a law of nature. Roads have the inconvenient habit of changing.</div>
 
 ---
+<!-- .slide: class="hidden-slide" -->
 
 ## Localization on an HD map
 
@@ -48,6 +50,7 @@ Note:
 LocNet’s stored map is a 3D point cloud, not the vector lanes themselves. The pose it recovers is what makes the HD map readable in the ego frame. Do not describe it as matching lane polylines.
 
 ---
+<!-- .slide: class="hidden-slide" -->
 
 ## LocNet architecture
 

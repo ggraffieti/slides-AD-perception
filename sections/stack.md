@@ -61,7 +61,6 @@ Perception is not only object detection. Use this slide to set the broad scope: 
 
 <div class="source"><a href="https://www.youtube.com/watch?v=ym-eRYplU8A">Altos Radar — radar and LiDAR point cloud comparison</a>, Jan. 5, 2024</div>
 
-<div class="callout quiz fragment"><span class="tag">Food for thought</span><p class="mini">If a camera recognizes a pedestrian but estimates poor depth, while LiDAR sees a shape but not its class—which sensor is “right”?</p></div>
 
 Note:
 The clip compares an Altos V1 4D radar with a Hesai AT128 LiDAR on one drive (South San Francisco Bay, Jan. 5, 2024). Radar points are drawn larger than LiDAR points. Point out how few radar returns there are, and that each one carries velocity, while LiDAR gives the geometry. Quiz answer: neither sensor alone. Each is right about a different property; fusion must keep the useful part of each and know which one to trust when they disagree.

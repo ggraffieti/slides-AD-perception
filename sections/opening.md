@@ -16,7 +16,6 @@
       </li>
       <li>Past researcher & PhD student @ <a href="https://www.unibo.it/en">University of Bologna</a></li>
       <li>Past Head of AI Research @ <a href="https://www.aiforpeople.org">AI for People</a></li>
-      <li>Member of many AI/ML associations</li>
     </ul>
   </div>
 </div>
@@ -25,8 +24,8 @@
 
 ## Outline
 
-- **Foundations**: the autonomous-driving stack, sensors, and four hard problems
-- **Representations**: images, point clouds, BEV, occupancy, and vectors
+- **Foundations**: the autonomous-driving stack and sensors
+- **Representations**: images, point clouds, BEV, and voxels
 - **Core tasks**: detection and tracking, occupancy and free space, mapping and topology, motion forecasting
 - **Multitask**: UniAD and PARA-Drive, perception trained together with planning
 - **Frontiers**: generative simulation, world models, end-to-end driving, VLMs, VLAs, and decision models
