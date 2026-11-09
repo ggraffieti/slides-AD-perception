@@ -61,7 +61,7 @@ LocNet’s stored map is a 3D point cloud, not the vector lanes themselves. The 
 <div class="source">Architecture figure: <a href="https://arxiv.org/abs/1712.02165">Yin et al., IV 2018</a></div>
 
 ---
-
+<!-- .slide: class="no-fragments" -->
 ## Neural Map Prior: a map that keeps learning
 
 - A global neural map, stored as sparse tiles, sits between a frozen HD file and a purely online prediction
@@ -69,7 +69,7 @@ LocNet’s stored map is a 3D point cloud, not the vector lanes themselves. The 
 - A learned fusion step writes today’s features back into the tile. The prior gets stronger as the fleet repeats the same roads
 - Bad weather and longer range are where it helps. A change no vehicle has observed yet is still missing from the tile
 
-<div class="source fragment"><a href="https://arxiv.org/abs/2304.08481">Neural Map Prior — Xiong et al., CVPR 2023</a></div>
+<div class="source"><a href="https://arxiv.org/abs/2304.08481">Neural Map Prior — Xiong et al., CVPR 2023</a></div>
 
 ---
 
@@ -129,12 +129,16 @@ Leave this open. A wrong light-to-lane link is the error you feel first: you ent
 
 ---
 
+<!-- .slide: class="top-fragments" -->
 ## TopoMLP: detect first, then reason
 
-- Topology reasoning = centerline detection + traffic-element detection + lane–lane and lane–traffic relations
-- Key finding: topology scores depend mostly on detection quality—with frozen detectors, swapping in ground-truth topology adds little
-- So: two strong detectors (3D lanes as Bézier curves, 2D traffic elements), then two small MLP heads that score every pair
-- Simple and strong: 41.2 OLS on OpenLane-V2 with ResNet-50; winner of the first OpenLane Topology challenge
+- **Two detectors, two spaces**
+  - **3D lanes**: query-based, as in MapTR. Each query predicts one centerline in 3D
+  - **2D traffic elements**: lights and signs boxed in the front image by an ordinary detector (YOLO or DETR style)
+- **Then MLPs build association matrices** from pairs of detected queries
+  - **Lane–lane** (N<sub>lane</sub> × N<sub>lane</sub>): which centerline continues into which
+  - **Lane–traffic element** (N<sub>lane</sub> × N<sub>TE</sub>): which light or sign controls which lane
+- **Key finding**: the score depends mostly on detection. Better detectors help more than a smarter relation head
 
 <p class="thought fragment">A traffic light you never detected cannot be associated with anything.</p>
 

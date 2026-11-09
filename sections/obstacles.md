@@ -17,7 +17,7 @@
 <div class="source fragment">Figure from <a href="https://arxiv.org/abs/2510.10287v1">Käppeler et al., arXiv preprint (2025)</a></div>
 
 ---
-
+<!-- .slide: class="no-fragments" -->
 ## Classic detection: one box per object
 
 - **Faster R-CNN (2015)**: two stages. Anchors propose candidate boxes, then a second head classifies and refines each one
@@ -25,7 +25,7 @@
 - **SSD (2016)**: the same one-stage idea on feature maps at several scales, so small and large objects share one network
 - All three emit many overlapping boxes. Non-maximum suppression then keeps a single box per object
 
-<div class="source fragment">
+<div class="source">
   <a href="https://arxiv.org/abs/1506.01497">Faster R-CNN — Ren et al., NIPS 2015</a> ·
   <a href="https://arxiv.org/abs/1506.02640">YOLO — Redmon et al., CVPR 2016</a> ·
   <a href="https://arxiv.org/abs/1512.02325">SSD — Liu et al., ECCV 2016</a>
@@ -72,7 +72,7 @@ The thought on the slide is the whole point. Do not derive the matching cost. If
 <div class="thought fragment">Queries are reusable slots, not tiny object templates waiting at fixed locations.</div>
 
 ---
-
+<!-- .slide: class="no-fragments" -->
 ## 3D detection: from DETR to multiple cameras
 
 - **LiDAR baseline (CenterPoint)**: encode the sweep into BEV, predict a heatmap of object centers, then regress size, yaw, and velocity

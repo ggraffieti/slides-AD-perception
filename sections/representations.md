@@ -6,6 +6,7 @@
 
 ---
 
+<!-- .slide: class="top-fragments" -->
 ## Image space, BEV, and point clouds
 
 - **Image space**
@@ -53,10 +54,10 @@
 
 ## Bird’s-eye view (BEV)
 
-- Image space has no meters, and a point cloud has no grid. BEV is the metric grid both can share
-- It is where the sensors meet: cameras arrive through a view transform, LiDAR and radar through pillars or voxels
-- In that grid a vehicle keeps its true size at 10 m and at 50 m, so distance and motion compare directly
-- It is the representation of choice for most of the tasks ahead: detection, tracking, mapping, and forecasting. Occupancy keeps a 3D volume
+- One common space for every sensor: cameras, LiDAR, and radar written in the same coordinates, fixed to the ego vehicle
+- Image space has directions and no meters; a point cloud has meters and no grid. BEV is the metric grid both can share
+- The rest of the stack reads that one frame: detection, tracking, mapping, and planning
+- In that frame, an object keeps its true size near and far (differently from image space)
 
 <div class="thought fragment">BEV is not a task. It is the coordinate system the other tasks share.</div>
 

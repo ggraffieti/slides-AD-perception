@@ -22,6 +22,7 @@
 
 ---
 
+<!-- .slide: class="no-fragments" -->
 ## Outline
 
 - **Foundations**: the autonomous-driving stack and sensors
