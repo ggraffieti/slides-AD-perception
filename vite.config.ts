@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { relative, resolve } from 'path';
 import { ModuleFormat } from 'rollup';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
@@ -42,6 +42,21 @@ export default defineConfig({
 		},
 	},
 	plugins: [
+		{
+			// Section markdown is fetched at runtime, so it is outside Vite's
+			// module graph and does not reload the page on its own.
+			name: 'reload-section-markdown',
+			configureServer(server) {
+				const sectionsDir = resolve(__dirname, 'sections');
+				server.watcher.add(sectionsDir);
+				server.watcher.on('change', (file) => {
+					const fromSections = relative(sectionsDir, file);
+					if (!fromSections.startsWith('..') && file.endsWith('.md')) {
+						server.ws.send({ type: 'full-reload' });
+					}
+				});
+			},
+		},
 		dts({
 			insertTypesEntry: true,
 			rollupTypes: false,

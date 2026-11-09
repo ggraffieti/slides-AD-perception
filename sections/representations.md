@@ -6,6 +6,7 @@
 
 ---
 
+<!-- .slide: class="top-fragments" -->
 ## Image space, BEV, and point clouds
 
 - **Image space**
@@ -51,7 +52,18 @@
 
 ---
 
-## Point clouds need their own encoders
+## Bird’s-eye view (BEV)
+
+- One common space for every sensor: cameras, LiDAR, and radar written in the same coordinates, fixed to the ego vehicle
+- Image space has directions and no meters; a point cloud has meters and no grid. BEV is the metric grid both can share
+- The rest of the stack reads that one frame: detection, tracking, mapping, and planning
+- In that frame, an object keeps its true size near and far (differently from image space)
+
+<div class="thought fragment">BEV is not a task. It is the coordinate system the other tasks share.</div>
+
+---
+
+## From point clouds to BEV
 
 - **Point-based (PointNet)**: a shared MLP per point, then a symmetric pooling, so the output ignores point order
 - **Voxels + sparse convolution (VoxelNet, SECOND)**: quantize space and convolve only where voxels are occupied
@@ -66,17 +78,6 @@
   <a href="https://www.mdpi.com/1424-8220/18/10/3337">SECOND — Sensors 2018</a> ·
   <a href="https://arxiv.org/abs/1812.05784">PointPillars — CVPR 2019</a>
 </div>
-
----
-
-## Bird’s-eye view (BEV)
-
-- Image space has no meters, and a point cloud has no grid. BEV is the metric grid both can share
-- It is where the sensors meet: cameras arrive through a view transform, LiDAR and radar through pillars or voxels
-- In that grid a vehicle keeps its true size at 10 m and at 50 m, so distance and motion compare directly
-- It is the representation of choice for most of the tasks ahead: detection, tracking, mapping, and forecasting. Occupancy keeps a 3D volume
-
-<div class="thought fragment">BEV is not a task. It is the coordinate system the other tasks share.</div>
 
 ---
 
@@ -98,8 +99,6 @@
 ---
 
 ## BEVFormer: camera features → BEV queries
-
-
 
 - **BEV queries**: one learned vector per cell, each responsible for a fixed (x, y) around the ego vehicle
 - **Spatial cross-attention**: the cell projects into the cameras that can see it and samples image features at several heights
@@ -128,6 +127,26 @@ This is backward projection in practice. Deformable attention keeps the cost man
 
 ---
 
+## Voxel space
+
+- **Voxel** = pixel in (quantized) 3D space
+  - The fundamental unit (quanta) of 3D space
+  - Typically represented as cubes, but other representations are used, inlcuding spheres, cylinders, etc.
+- Typically used with point cloud data
+- **Depth prediction** is usually performed explicitly to convert flat image data to voxel space 
+- There exists 3D versions of many 2D view transformers
+
+---
+<!-- .slide: class="no-fragments" -->
+
+## Voxel Space
+
+<img class="diagram" src="./img/Occ.png" alt="Visualization of a voxel grid representing occupancy">
+
+<div class="source">Image from: <a href="https://dl.acm.org/doi/10.1145/3838726">Wang et al., ACM Computing Surveys (2026)</a></div>
+---
+<!-- .slide: class="hidden-slide" -->
+
 ## Four complementary outputs
 
 - **Object sets** — boxes, classes, velocities, tracks
@@ -147,7 +166,7 @@ This is backward projection in practice. Deformable attention keeps the cost man
 - **Futures (Distribution)** — motion forecasting and occupancy flow
 - **Cross-cutting** — multitask learning, with planning in the loop
 
-<div class="callout takeaway fragment"><span class="tag">Structure</span><p class="mini">We will study each task through its output, architecture idea, failure modes, datasets, and small project ideas.</p></div>
+<div class="callout takeaway fragment"><span class="tag">Structure</span><p class="mini">We will analyze each task through its output, architecture idea, failure modes, datasets, and small project ideas.</p></div>
 
 Note:
 This is the menu for the rest of the talk. Name the four outputs and move on. Each of the next sections is one of them.

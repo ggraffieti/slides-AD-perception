@@ -248,9 +248,10 @@
 				document
 					.querySelectorAll('.reveal .slides li:not(.fragment)')
 					.forEach((item) => {
-						if (!item.closest('.no-fragments')) {
-							item.classList.add('fragment');
-						}
+						if (item.closest('.no-fragments')) return;
+						// On these slides, a nested bullet is part of its parent step.
+						if (item.closest('.top-fragments') && item.parentElement?.closest('li')) return;
+						item.classList.add('fragment');
 					});
 			},
 		};

@@ -62,11 +62,11 @@ There is no secure threshold on this picture. 0.40, 0.35, and 0.25 are too close
 
 ## QCNet: encode the scene once, then the futures
 
-- An agent-centric model puts the origin on the car at the current instant. One frame later that origin has moved, so the history and the map are encoded again
-- QCNet anchors each past state and each lane in its own frame. The embedding of a turn does not change if the map is rotated, and it stays valid as the car moves
-- Attention adds only the relative pose between two elements. Every agent, including the neighbors, reads this same cache
-- Six queries propose futures step by step, so a distant exit can look at a different part of the map than the next meter
-- A second pass corrects those proposals and gives each one a probability
+- **Encode the scene once.** Each past position and each lane is stored in its own frame
+- **Propose the futures.** Six queries walk forward step by step, so a distant exit and the next meter can attend to different parts of the map
+- **Correct and score.** A second pass fixes those proposals and gives each one a probability
+- **Encoder.** Lanes are MapTR-style polylines. Self- and cross-attention mix lanes, history, and cars, adding only the relative pose
+- **Decoder.** Six learnable queries, one future each, as in DETR. Each query attends to the scene, then corrects its path and scores it
 
 <div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2023/html/Zhou_Query-Centric_Trajectory_Prediction_CVPR_2023_paper.html">QCNet — Zhou et al., CVPR 2023</a></div>
 
