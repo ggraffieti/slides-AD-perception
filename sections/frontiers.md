@@ -105,11 +105,10 @@ This is the long tail, synthesized. Say so, then say the limit: a convincing cow
 
 ## DriveLaW: plan from the video latent
 
-- A video diffusion model is trained to continue a driving clip. Its latent packs the scene, the motion, and the layout into one state
-- The planner is a second diffusion model. It reads that same latent and writes a trajectory, with no separate bird’s-eye-view features
-- Video and planning are trained in stages, so the two losses do not pull the shared state apart
-- On nuScenes future-video prediction it leads the methods it compares: FID 4.6 and FVD 81.3
-- On NAVSIM it scores 89.1 PDMS from one camera, with no learned scorer after the planner
+- **ELI5:** Two models share one hidden state. The first continues the driving video. The second never builds a bird’s-eye map: it reads that same state and writes the path
+- **World model in latent space:** A video diffusion model predicts future scene dynamics directly in latent space, encoding layout, motion, and context without building explicit BEV features
+- **Planning as trajectory diffusion:** An action diffusion model reads those video latents and directly generates multimodal future trajectories conditioned on high-level navigation commands
+- **Staged co-training:** Video prediction and planning are trained in stages, preventing conflicting task gradients from degrading the shared latent representation
 
 <div class="source fragment"><a href="https://openaccess.thecvf.com/content/CVPR2026/html/Xia_DriveLaW_Unifying_Planning_and_Video_Generation_in_a_Latent_Driving_CVPR_2026_paper.html">DriveLaW — Xia et al., CVPR 2026</a></div>
 
@@ -135,6 +134,32 @@ This is the long tail, synthesized. Say so, then say the limit: a convincing cow
 
 Note:
 Callback to the stack from the beginning: the overlapping circles were a hint. End-to-end is the limit where they merge into one network.
+
+---
+
+## EMMA: Waymo’s end-to-end model
+
+- **Inputs:** Surround video, a router command, and the ego history. No HD map, no LiDAR
+- **Text in, text out:** Waypoints and boxes are plain decimal text, so Gemini’s vocabulary is reused
+- **Reason first:** Four sentences (scene, critical objects, behavior, decision) come before the path
+- **One prompt per task:** “Detect every object in 3D” returns boxes; a road-graph prompt returns lanes. Same weights
+- **Limits:** A few frames at a time, cameras only, and a heavy model
+
+<div class="source fragment"><a href="https://arxiv.org/abs/2410.23262">EMMA — Hwang, Xu, et al., Waymo, 2024</a></div>
+
+Note:
+Cameras are the only sensor, and the path, boxes, and lanes are all text, so one language model emits them. The rationale is drafted by other models, then Gemini learns to say it before the waypoints. If someone asks about the nuScenes score, hold it: the evaluation slide is why that number is a weak trophy.
+
+---
+
+## EMMA architecture
+
+<img class="diagram wide" src="./img/emma-arch.png" alt="EMMA overview: router command and camera video and ego status enter EMMA, built on Gemini, which outputs a driving rationale and ego future waypoints, plus spatial reasoning, road comprehension, and scene understanding">
+
+<div class="source">Figure 1: <a href="https://arxiv.org/abs/2410.23262">Hwang, Xu, et al., Waymo, 2024</a></div>
+
+Note:
+Left to right: command, cameras, and ego status go in. The rationale comes out before the waypoints. The green row at the bottom is the same model with other prompts. Do not read the example sentences.
 
 ---
 
