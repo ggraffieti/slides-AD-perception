@@ -71,6 +71,17 @@ This is the long tail, synthesized. Say so, then say the limit: a convincing cow
 
 ---
 
+## Re-rendering reality
+
+<video class="diagram wide" data-autoplay muted loop playsinline src="./videos/gs_comparison.mp4"></video>
+
+<p class="mini muted">Left: recorded surround footage. Center: neural reconstruction re-rendered on the logged path. Right: same digital twin rendered from a modified ego trajectory.</p>
+
+Note:
+Highlight the three pairs of views: real footage on the left, neural reconstruction along the recorded drive in the middle, and novel-view synthesis along a perturbed path on the right. This shows how 3D Gaussian representations enable counterfactual, closed-loop testing from recorded data.
+
+---
+
 ## Learned world models
 
 <p class="fragment">Given the scene now, a world model predicts the scene a moment later.</p>
