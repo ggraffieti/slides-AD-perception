@@ -205,6 +205,15 @@ Pause on the number. On nuScenes, 73.9% of the log is going straight, and an MLP
 - **End-to-end with evidence:** UniAD and PARA-Drive, scored on NAVSIM, and Bench2Drive where the world reacts
 
 ---
+## A glimpse into the future?
+
+<img class="diagram wide" src="./img/meteor2_inference.gif" alt="Meteor 2 model outputting a video of a car driving on a road">
+
+<p class="mini muted">Zero human labels. Zero human-written code. Multiple machines run by AI agents.</p>
+
+<div class="source fragment"><a href="https://github.com/tier4/METEOR">METEOR (2026)</a></div>
+
+---
 <!-- .slide: class="hidden-slide" -->
 ## Project ladder
 
