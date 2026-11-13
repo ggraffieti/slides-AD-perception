@@ -82,6 +82,61 @@ Highlight the three pairs of views: real footage on the left, neural reconstruct
 
 ---
 
+## End-to-end driving
+
+<img class="diagram wide transparent" src="./img/ad-stack-merged.svg" data-light-src="./img/ad-stack-merged-light.svg" alt="The autonomous-driving stack with localization, perception, prediction, and planning merged into one learned network">
+
+- **Modular:** interpretable interfaces and local validation
+- **End-to-end:** sensors in, trajectory out—joint optimization, but difficult diagnosis
+- The real spectrum includes modular, jointly trained (UniAD, PARA-Drive), and fully end-to-end systems
+
+Note:
+Callback to the stack from the beginning: the overlapping circles were a hint. End-to-end is the limit where they merge into one network.
+
+---
+
+## DiffusionDrive: Diffusion-based end-to-end driving
+
+- **Inputs:** Multi-view camera images, LiDAR point clouds, and ego-vehicle information fused into a shared representation
+- **Generative planning:** A diffusion decoder generates multiple plausible future driving trajectories, capturing different possible driving intentions
+- **Learning paradigm:** Trained through imitation of human driving demonstrations, with auxiliary perception supervision
+- **Limits:** Relies on camera and LiDAR; benchmark results do not establish real-world safety or deployment readiness
+
+<div class="source fragment"><a href="https://arxiv.org/abs/2411.15139">DiffusionDrive — Liao, Chen, et al., CVPR 2025 (Highlight)</a></div>
+
+Note:
+Unlike conventional end-to-end models that directly regress a single trajectory, DiffusionDrive treats driving as a generative planning problem. It first extracts and fuses camera and LiDAR features. A diffusion decoder then generates multiple candidate trajectories conditioned on the scene representation. The key innovation is truncated diffusion: rather than requiring many iterative denoising steps, it uses predefined trajectory anchors and only two denoising steps. This allows the model to capture the multi-modal nature of driving decisions while maintaining real-time inference speed. Auxiliary perception tasks help learn the scene representation, but the model does not rely on a separately executed conventional perception-prediction-planning pipeline.
+
+---
+
+## DiffusionDrive architecture
+
+<img class="diagram wide" src="./img/diffusiondrive.png" alt="DiffusionDrive architecture">
+
+<div class="source"><a href="https://arxiv.org/abs/2411.15139">DiffusionDrive — Liao, Chen, et al., CVPR 2025 (Highlight)</a></div>
+
+---
+
+## How do we know an end-to-end driver is good?
+
+- **Open-loop** (nuScenes): compare the planned path with the logged human path—cheap, but the car never sees the consequences
+- On nuScenes, 73.9% of the data is straight driving; an MLP that sees only ego status (velocity, acceleration, yaw) matches state-of-the-art planners on L2 and collision rate
+- **Non-reactive simulation** (NAVSIM): score progress, collisions, and comfort on real data over a short horizon
+- **Closed-loop** (CARLA, Bench2Drive): the policy drives, and the world reacts
+
+<p class="thought fragment">If a model ignoring every camera matches your planner, the benchmark is grading the speedometer.</p>
+
+<div class="source fragment">
+  <a href="https://arxiv.org/abs/2312.03031">Is Ego Status All You Need? — Li et al., CVPR 2024</a> ·
+  <a href="https://arxiv.org/abs/2406.15349">NAVSIM — NeurIPS 2024</a> ·
+  <a href="https://arxiv.org/abs/2406.03877">Bench2Drive — NeurIPS 2024</a>
+</div>
+
+Note:
+Pause on the number. On nuScenes, 73.9% of the log is going straight, and an MLP that sees only speed, acceleration, and yaw matches published planners. Open-loop rewards imitating the log. Closed-loop is where the world answers back. NAVSIM sits between them.
+
+---
+
 ## Learned world models
 
 <p class="fragment">Given the scene now, a world model predicts the scene a moment later.</p>
@@ -135,20 +190,20 @@ Highlight the three pairs of views: real footage on the left, neural reconstruct
 
 ---
 
-## End-to-end driving
+## VLMs, VLAs, decision models, and open vocabulary
 
-<img class="diagram wide transparent" src="./img/ad-stack-merged.svg" data-light-src="./img/ad-stack-merged-light.svg" alt="The autonomous-driving stack with localization, perception, prediction, and planning merged into one learned network">
+- **VLM:** connect visual features and language concepts
+- **VLA:** condition actions on vision and language/instructions
+- **Decision model:** score each offered choice with a probability. JEV reads the images and the text and answers in one pass
+- **Open-vocabulary perception:** detect or segment from a text query, such as “fallen mattress” or “horse cart,” including obstacles that were never in the class list
+- Potential: semantic reasoning, explainable interfaces
+- Risks: hallucination, latency, weak grounding, unfaithful explanations
 
-- **Modular:** interpretable interfaces and local validation
-- **End-to-end:** sensors in, trajectory out—joint optimization, but difficult diagnosis
-- The real spectrum includes modular, jointly trained (UniAD, PARA-Drive), and fully end-to-end systems
-
-Note:
-Callback to the stack from the beginning: the overlapping circles were a hint. End-to-end is the limit where they merge into one network.
+<div class="source fragment"><a href="https://arxiv.org/abs/2312.14150">DriveLM</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA</a> · <a href="https://huggingface.co/autotrust/JEV-27B-VL">JEV</a></div>
 
 ---
 
-## EMMA: Waymo’s end-to-end model
+## EMMA: Waymo’s end-to-end VLA 
 
 - **Inputs:** Surround video, a router command, and the ego history. No HD map, no LiDAR
 - **Text in, text out:** Waypoints and boxes are plain decimal text, so Gemini’s vocabulary is reused
@@ -174,39 +229,6 @@ Left to right: command, cameras, and ego status go in. The rationale comes out b
 
 ---
 
-## How do we know an end-to-end driver is good?
-
-- **Open-loop** (nuScenes): compare the planned path with the logged human path—cheap, but the car never sees the consequences
-- On nuScenes, 73.9% of the data is straight driving; an MLP that sees only ego status (velocity, acceleration, yaw) matches state-of-the-art planners on L2 and collision rate
-- **Non-reactive simulation** (NAVSIM): score progress, collisions, and comfort on real data over a short horizon
-- **Closed-loop** (CARLA, Bench2Drive): the policy drives, and the world reacts
-
-<p class="thought fragment">If a model ignoring every camera matches your planner, the benchmark is grading the speedometer.</p>
-
-<div class="source fragment">
-  <a href="https://arxiv.org/abs/2312.03031">Is Ego Status All You Need? — Li et al., CVPR 2024</a> ·
-  <a href="https://arxiv.org/abs/2406.15349">NAVSIM — NeurIPS 2024</a> ·
-  <a href="https://arxiv.org/abs/2406.03877">Bench2Drive — NeurIPS 2024</a>
-</div>
-
-Note:
-Pause on the number. On nuScenes, 73.9% of the log is going straight, and an MLP that sees only speed, acceleration, and yaw matches published planners. Open-loop rewards imitating the log. Closed-loop is where the world answers back. NAVSIM sits between them.
-
----
-
-## VLMs, VLAs, decision models, and open vocabulary
-
-- **VLM:** connect visual features and language concepts
-- **VLA:** condition actions on vision and language/instructions
-- **Decision model:** score each offered choice with a probability. JEV reads the images and the text and answers in one pass
-- **Open-vocabulary perception:** detect or segment from a text query, such as “fallen mattress” or “horse cart,” including obstacles that were never in the class list
-- Potential: semantic reasoning, explainable interfaces
-- Risks: hallucination, latency, weak grounding, unfaithful explanations
-
-<div class="source fragment"><a href="https://arxiv.org/abs/2312.14150">DriveLM</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA</a> · <a href="https://huggingface.co/autotrust/JEV-27B-VL">JEV</a></div>
-
----
-
 ## Research directions
 
 - **Open world:** calibrated probabilities for novel objects and choices, with open-vocabulary models and JEV
@@ -220,9 +242,9 @@ Pause on the number. On nuScenes, 73.9% of the log is going straight, and an MLP
 
 <img class="diagram wide" src="./img/meteor2_inference.gif" alt="Meteor 2 model outputting a video of a car driving on a road">
 
-<p class="mini muted">Zero human labels. Zero human-written code. Multiple machines run by AI agents.</p>
+<p class="mini muted fragment">Zero human labels. Zero human-written code. Multiple machines run by AI agents.</p>
 
-<div class="source fragment"><a href="https://github.com/tier4/METEOR">METEOR (2026)</a></div>
+<div class="source fragment"><a href="https://github.com/tier4/METEOR">Tier IV - METEOR (2026)</a></div>
 
 ---
 <!-- .slide: class="hidden-slide" -->
